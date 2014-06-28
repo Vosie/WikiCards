@@ -1,4 +1,4 @@
-exlang
+WikiCards
 ======
 
 A language learning tool
