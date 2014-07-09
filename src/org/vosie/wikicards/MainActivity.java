@@ -1,25 +1,85 @@
 package org.vosie.wikicards;
 
+import java.util.Arrays;
+import java.util.Locale;
+
+import org.vosie.wikicards.utils.LanguageUtils;
+
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements Constants {
+
+	private Spinner languageSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		initViews();
+	}
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+	private void initViews() {
+		initLangugeSpinner();
+	}
+
+	private void initLangugeSpinner() {
+		String[] langNames = LanguageUtils
+				.getLocalizedLanguageNames(SUPPORTED_LANGUAGES);
+
+		languageSpinner = (Spinner) this.findViewById(R.id.spinner_language);
+		languageSpinner.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.large_spinner_item, langNames));
+
+		// select spinner with the saved language code.
+		languageSpinner.setSelection(Arrays.asList(SUPPORTED_LANGUAGES)
+				.indexOf(readSelectedLanguageCode()));
+		languageSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int idx,
+					long arg3) {
+				switchSelectedLanguage(SUPPORTED_LANGUAGES[idx]);
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// Do nothing in this case.
+			}
+		});
+	}
+
+	private void switchSelectedLanguage(String langCode) {
+		// save the selected language to preference for future usage.
+		SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putString(PREF_KEY_SELECTED_LANGUAGE, langCode);
+		editor.commit();
+		// update the language code property.
+		Settings.selectedLanguageCode = langCode;
+	}
+
+	private String readSelectedLanguageCode() {
+		String defLang = SUPPORTED_LANGUAGES[0];
+		// We choose the second language when the current language is English.
+		if (Locale.getDefault().getLanguage().equals(defLang)) {
+			defLang = SUPPORTED_LANGUAGES[1];
 		}
+		SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+		// update the language code property to sync the storage with memory
+		// variable.
+		Settings.selectedLanguageCode = sp.getString(
+				PREF_KEY_SELECTED_LANGUAGE, defLang);
+		return Settings.selectedLanguageCode;
 	}
 
 	@Override
@@ -41,22 +101,4 @@ public class MainActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_main, container,
-					false);
-			return rootView;
-		}
-	}
-
 }

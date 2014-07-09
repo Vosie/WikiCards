@@ -1,8 +1,69 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context="org.vosie.wikicards.MainActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="24dp" >
+
+        <!-- Learning xxx from Wikipedia -->
+
+        <TextView
+            android:id="@+id/label_wikicards"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_learning"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="32sp" />
+
+        <Spinner
+            android:id="@+id/spinner_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:prompt="@string/title_spinner"
+            android:spinnerMode="dialog"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/label_fromwiki"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_fromwiki"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="32sp" />
+    </LinearLayout>
+    <!-- control buttons -->
+
+    <Button
+        android:id="@+id/button_cardmode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/button_cardmode"
+        android:text="@string/button_cardmode" />
+
+    <Button
+        android:id="@+id/button_stared"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/button_stared"
+        android:text="@string/button_stared" />
+
+    <Button
+        android:id="@+id/button_downloaddb"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/button_downloaddb"
+        android:text="@string/button_downloaddb" />
+
+</LinearLayout>
