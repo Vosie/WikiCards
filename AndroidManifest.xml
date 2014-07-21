@@ -37,6 +37,10 @@
             android:name=".LicenseActivity"
             android:label="@string/label_licenses" >
         </activity>
+        <activity
+            android:name=".CardActivity"
+            android:label="@string/title_activity_card" >
+        </activity>
     </application>
 
 </manifest>

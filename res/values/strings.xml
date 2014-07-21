@@ -22,5 +22,17 @@
     <string name="pref_title_others">Others</string>
     <string name="pref_title_cards">WikiCards</string>
     <string name="pref_title_native_tongue">My Native Tongue</string>
+    <string name="title_activity_card">Learning Words</string>
+    <string name="button_previous">Previous</string>
+    <string name="button_next">Next</string>
+    <string name="loading">Loading</string>
+    <string name="dialog_title_downloading">Downloading</string>
+    <string name="dialog_desc_downloading">Download word. Please wait</string>
+    <string name="dialog_title_network_error">Unable to Connect to Internet</string>
+    <string name="dialog_desc_network_error">Please check your internet connection and try again.</string>
+    <string name="dialog_title_http_error">Connection Error</string>
+    <string name="dialog_desc_http_error">Sorry, the connection between your device to our server had some problems. We will check them as soon as possible.</string>
+    <string name="dialog_title_internal_error">Error</string>
+    <string name="dialog_desc_internal_error">There is something wrong to save the data into your device. We will check them as soon as possible.</string>
 
 </resources>
