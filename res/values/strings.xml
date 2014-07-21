@@ -2,13 +2,25 @@
 <resources>
 
     <string name="app_name">WikiCards</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="label_learning">Learning</string>
+    <string name="label_licenses">Open Source Licenses</string>
+    <string name="label_gplv3">GPLv3:</string>
+    <string name="label_license_WikiCards">WikiCards</string>
+    <string name="label_license_wikicards_url">(<a href="http://git.io/DzZMSA">http://git.io/DzZMSA</a>)</string>
     <string name="title_spinner">Languages</string>
     <string name="title_fromwiki">from Wikipedia</string>
+    <string name="title_settings_activity">Settings of WikiCards</string>
     <string name="button_cardmode">Start to Learn</string>
     <string name="button_stared">Stared Words</string>
     <string name="button_downloaddb">Download Offline DB</string>
+    <string name="pref_title_license">Open Source Licenses</string>
+    <string name="pref_desc_contribute_recordings_on">Thanks for your contribution of recordings. That really helps.</string>
+    <string name="pref_desc_contribute_recordings_off">Please turn this on to help others learn from your native tongue.</string>
+    <string name="pref_title_contribute_recordings">Contribute My Recordings</string>
+    <string name="pref_title_blog">Vosie\'s Blog</string>
+    <string name="pref_title_others">Others</string>
+    <string name="pref_title_cards">WikiCards</string>
+    <string name="pref_title_native_tongue">My Native Tongue</string>
 
 </resources>
