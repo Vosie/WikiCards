@@ -7,8 +7,10 @@ import org.vosie.wikicards.utils.LanguageUtils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,14 @@ public class MainActivity extends Activity implements Constants {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     initViews();
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    // We need to read preference here because user may change the settings in
+    // SettingsActivity which goes back to this activity.
+    this.initPreferences();
   }
 
   private void initViews() {
@@ -57,6 +67,14 @@ public class MainActivity extends Activity implements Constants {
         // Do nothing in this case.
       }
     });
+  }
+
+  private void initPreferences() {
+    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+    Settings.nativeTongue = sp.getString(PREF_KEY_NATIVE_TONGUE,
+            SUPPORTED_LANGUAGES[0]);
+    Settings.contributeRecordings = sp.getBoolean(PREF_KEY_CONTRIBUTE_SND,
+            true);
   }
 
   private void switchSelectedLanguage(String langCode) {
@@ -98,8 +116,15 @@ public class MainActivity extends Activity implements Constants {
     // as you specify a parent activity in AndroidManifest.xml.
     int id = item.getItemId();
     if (id == R.id.action_settings) {
+      openActivity(this, SettingsActivity.class);
       return true;
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  // If other activities also use this method, we should move it to
+  // an utill class.
+  private static void openActivity(Context ctx, Class<? extends Activity> cls) {
+    ctx.startActivity(new Intent(ctx, cls));
   }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/pref_title_cards" >
+        <org.vosie.wikicards.prefs.LangsPreference
+            android:key="pref_key_native_tongue"
+            android:title="@string/pref_title_native_tongue" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_key_contribute_recordings"
+            android:summaryOff="@string/pref_desc_contribute_recordings_off"
+            android:summaryOn="@string/pref_desc_contribute_recordings_on"
+            android:title="@string/pref_title_contribute_recordings" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_title_others" >
+        <Preference android:title="@string/pref_title_blog" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://blog.vosie.org/" />
+        </Preference>
+        <Preference android:title="@string/pref_title_license" >
+            <intent
+                android:targetClass="org.vosie.wikicards.LicenseActivity"
+                android:targetPackage="org.vosie.wikicards" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

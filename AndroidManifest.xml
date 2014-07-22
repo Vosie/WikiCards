@@ -7,8 +7,9 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="19" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +25,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".data.DownloadService"></service>
+
+        <service android:name=".data.DownloadService" >
+        </service>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_settings_activity" >
+        </activity>
+        <activity
+            android:name=".LicenseActivity"
+            android:label="@string/label_licenses" >
+        </activity>
     </application>
 
 </manifest>
