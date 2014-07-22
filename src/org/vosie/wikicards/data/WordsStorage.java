@@ -98,7 +98,7 @@ public class WordsStorage {
       word.languageCode = cursor.getString(cursor.getColumnIndex("languageCode"));
       word.url = cursor.getString(cursor.getColumnIndex("url"));
       word.latitude = cursor.getString(cursor.getColumnIndex("latitude"));
-      word.longitude = cursor.getString(cursor.getColumnIndex("longitude"));
+      word.longitude = cursor.getString(cursor.getColumnIndex("longtitude"));
       word.imageURL = cursor.getString(cursor.getColumnIndex("imageURL"));
       word.shortDesc = cursor.getString(cursor.getColumnIndex("shortDesc"));
       word.category = cursor.getInt(cursor.getColumnIndex("category"));
