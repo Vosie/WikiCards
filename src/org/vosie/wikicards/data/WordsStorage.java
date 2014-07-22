@@ -32,7 +32,7 @@ public class WordsStorage {
           + "serverID     TEXT    NOT NULL,"
           + "url          TEXT    NOT NULL,"
           + "latitude     TEXT,"
-          + "longitude   TEXT,"
+          + "longtitude   TEXT,"
           + "imageURL     TEXT,"
           + "shortDesc    TEXT,"
           + "category     INTEGER DEFAULT ( 0 ))";
@@ -98,7 +98,7 @@ public class WordsStorage {
       word.languageCode = cursor.getString(cursor.getColumnIndex("languageCode"));
       word.url = cursor.getString(cursor.getColumnIndex("url"));
       word.latitude = cursor.getString(cursor.getColumnIndex("latitude"));
-      word.longitude = cursor.getString(cursor.getColumnIndex("longitude"));
+      word.longitude = cursor.getString(cursor.getColumnIndex("longtitude"));
       word.imageURL = cursor.getString(cursor.getColumnIndex("imageURL"));
       word.shortDesc = cursor.getString(cursor.getColumnIndex("shortDesc"));
       word.category = cursor.getInt(cursor.getColumnIndex("category"));
@@ -239,7 +239,7 @@ public class WordsStorage {
     values.put("languageCode", word.languageCode);
     values.put("url", word.url);
     values.put("latitude", word.latitude);
-    values.put("longitude", word.longitude);
+    values.put("longtitude", word.longitude);
     values.put("imageURL", word.imageURL);
     values.put("shortDesc", word.shortDesc);
     values.put("category", word.category);
