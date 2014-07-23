@@ -14,14 +14,17 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 public class MainActivity extends Activity implements Constants {
 
   private Spinner languageSpinner;
+  private Button cardModeButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class MainActivity extends Activity implements Constants {
 
   private void initViews() {
     initLangugeSpinner();
+    initCardModeButton();
   }
 
   private void initLangugeSpinner() {
@@ -99,6 +103,17 @@ public class MainActivity extends Activity implements Constants {
     Settings.selectedLanguageCode = sp.getString(
             PREF_KEY_SELECTED_LANGUAGE, defLang);
     return Settings.selectedLanguageCode;
+  }
+
+  private void initCardModeButton() {
+    cardModeButton = (Button) findViewById(R.id.button_cardmode);
+    cardModeButton.setOnClickListener(new OnClickListener() {
+
+      @Override
+      public void onClick(View arg0) {
+        openActivity(MainActivity.this, CardActivity.class);
+      }
+    });
   }
 
   @Override
