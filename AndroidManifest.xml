@@ -45,6 +45,11 @@
             android:label="@string/title_activity_card"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="org.vosie.wikicards.DownloadDBActivity"
+            android:label="@string/title_activity_downloaddb"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

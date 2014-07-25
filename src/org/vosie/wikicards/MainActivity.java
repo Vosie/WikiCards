@@ -44,6 +44,18 @@ public class MainActivity extends Activity implements Constants {
   private void initViews() {
     initLangugeSpinner();
     initCardModeButton();
+    initDownloadDB();
+  }
+
+  private void initDownloadDB() {
+    this.findViewById(R.id.button_downloaddb).setOnClickListener(
+            new OnClickListener() {
+
+              @Override
+              public void onClick(View v) {
+                openActivity(MainActivity.this, DownloadDBActivity.class);
+              }
+            });
   }
 
   private void initLangugeSpinner() {
