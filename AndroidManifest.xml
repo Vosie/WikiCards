@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="org.vosie.wikicards.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,15 +32,18 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_settings_activity" >
+            android:label="@string/title_settings_activity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".LicenseActivity"
-            android:label="@string/label_licenses" >
+            android:label="@string/label_licenses"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".CardActivity"
-            android:label="@string/title_activity_card" >
+            android:label="@string/title_activity_card"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
