@@ -3,13 +3,12 @@ package org.vosie.wikicards;
 import org.vosie.wikicards.data.DownloadWordListener;
 import org.vosie.wikicards.data.Word;
 import org.vosie.wikicards.data.WordsStorage;
+import org.vosie.wikicards.utils.ErrorUtils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -17,6 +16,8 @@ import android.widget.TextView;
 
 public class CardActivity extends Activity {
 
+  private static final String TAG = "CardActivity";
+  
   private Button previousButton;
   private Button nextButton;
   private TextView wordTextView;
@@ -39,8 +40,8 @@ public class CardActivity extends Activity {
   }
 
   private void initVariables() {
-    wordsStorage = new WordsStorage(this);
-    serverIDs = wordsStorage.getServerIDs(0);
+    wordsStorage = new WordsStorage(this, Constants.CATEGORY_COUNTRY);
+    serverIDs = wordsStorage.getServerIDs();
     failOccurIndex = total = serverIDs.length;
     langCode = Settings.selectedLanguageCode;
   }
@@ -105,25 +106,11 @@ public class CardActivity extends Activity {
 
                 @Override
                 public void onError(int errorType, Exception e) {
-                  String title = "";
-                  String desc = "";
-                  switch (errorType) {
-                    case DownloadWordListener.NETWORK_ERROR:
-                      title = getString(R.string.dialog_title_network_error);
-                      desc = getString(R.string.dialog_desc_network_error);
-                      break;
-                    case DownloadWordListener.HTTP_ERROR:
-                      title = getString(R.string.dialog_title_http_error);
-                      desc = getString(R.string.dialog_desc_http_error);
-                      break;
-                    case DownloadWordListener.INTERNAL_ERROR:
-                      title = getString(R.string.dialog_title_internal_error);
-                      desc = getString(R.string.dialog_desc_internal_error);
-                      break;
-                  }
                   failOccurIndex = currentIndex--;
                   progress.dismiss();
-                  ShowAlertDialog(title, desc, failOccurIndex == 0);
+                  ErrorUtils.handleDownloadkError(CardActivity.this, errorType,
+                          failOccurIndex == 0);
+                  Log.e(TAG, "error while downloading word", e);
                 }
               });
     }
@@ -131,25 +118,5 @@ public class CardActivity extends Activity {
 
   private void showWord(Word word) {
     wordTextView.setText(word.label);
-  }
-
-  private void ShowAlertDialog(String title, String msg, final boolean closeSelf)
-  {
-    Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle(title);
-    builder.setMessage(msg);
-    builder.setPositiveButton(android.R.string.ok,
-            new DialogInterface.OnClickListener() {
-
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-                if (closeSelf && AlertDialog.BUTTON_POSITIVE == which) {
-                  CardActivity.this.finish();
-                }
-              }
-            });
-    AlertDialog dialog = builder.create();
-    dialog.setCanceledOnTouchOutside(false);
-    dialog.show();
   }
 }

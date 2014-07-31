@@ -1,5 +1,6 @@
 package org.vosie.wikicards.data;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.vosie.wikicards.Constants;
 import org.vosie.wikicards.utils.JSONUtils;
 import org.vosie.wikicards.utils.NetworkUtils;
 
@@ -40,19 +42,28 @@ public class WordsStorage {
   protected static final String CREATE_INDEX = "CREATE UNIQUE INDEX IF NOT " +
           "EXISTS serverIDIndex ON words(serverID)";
 
-  private Context mContext;
+  // The first category id is 1 instead of 0. So, we put a dummy category name:
+  // preserved. We may also use it to play some tricks in the future.
+  private static final String[] CATEGORY_NAMES = new String[] { "preserved",
+          "country" };
 
-  public WordsStorage(Context context) {
+  private Context mContext;
+  private int category;
+
+  public WordsStorage(Context context, int category) {
     mContext = context;
+    this.category = category;
 
     if (!checkBaseDBExist()) {
-      mContext.openOrCreateDatabase("base.sqlite3", Context.MODE_PRIVATE, null);
+      mContext.openOrCreateDatabase(getDBName("base", category),
+              Context.MODE_PRIVATE, null);
 
       InputStream input = null;
       OutputStream output = null;
       try {
-        input = mContext.getAssets().open("base.sqlite3");
-        output = new FileOutputStream(mContext.getDatabasePath("base.sqlite3"));
+        input = mContext.getAssets().open(getDBName("base", category));
+        output = new FileOutputStream(mContext.getDatabasePath(
+                getDBName("base", category)));
         IOUtils.copy(input, output);
       } catch (IOException e) {
         e.printStackTrace();
@@ -64,15 +75,18 @@ public class WordsStorage {
   }
 
   private boolean checkBaseDBExist() {
-    return mContext.getDatabasePath("base.sqlite3").isFile();
+    File db = mContext.getDatabasePath(getDBName("base", category));
+    return db.exists() && db.isFile();
   }
 
-  public String[] getServerIDs(int CategoryID) {
+  public String[] getServerIDs() {
 
     ArrayList<String> serverIDs = new ArrayList<String>();
 
-    SQLiteDatabase db = mContext.openOrCreateDatabase("base.sqlite3",
-            Context.MODE_PRIVATE, null);
+    SQLiteDatabase db = mContext.openOrCreateDatabase(
+            getDBName("base", category),
+            Context.MODE_PRIVATE,
+            null);
 
     Cursor cursor = db.rawQuery("select serverID from words", null);
 
@@ -80,7 +94,28 @@ public class WordsStorage {
       serverIDs.add(cursor.getString(0));
     }
 
-    return serverIDs.toArray(new String[serverIDs.size()]);
+    return serverIDs.toArray(new String[0]);
+  }
+
+  public int getRowCount(String langCode) {
+    SQLiteDatabase db = openOrCreateWordsDatebase(langCode);
+
+    String sql = "SELECT COUNT(serverID) FROM words";
+
+    Cursor cursor = db.rawQuery(sql, null);
+    try {
+      if (cursor.moveToFirst()) {
+        return cursor.getInt(0);
+      } else {
+        return 0;
+      }
+    } finally {
+      cursor.close();
+    }
+  }
+
+  private String getDBName(String langCode, int category) {
+    return langCode + "-" + category + ".sqlite3";
   }
 
   public Word getWordFromLocal(String serverID, String langCode) {
@@ -95,7 +130,8 @@ public class WordsStorage {
       word = new Word();
       word.serverID = cursor.getString(cursor.getColumnIndex("serverID"));
       word.label = cursor.getString(cursor.getColumnIndex("label"));
-      word.languageCode = cursor.getString(cursor.getColumnIndex("languageCode"));
+      word.languageCode = cursor.getString(
+              cursor.getColumnIndex("languageCode"));
       word.url = cursor.getString(cursor.getColumnIndex("url"));
       word.latitude = cursor.getString(cursor.getColumnIndex("latitude"));
       word.longitude = cursor.getString(cursor.getColumnIndex("longitude"));
@@ -108,8 +144,10 @@ public class WordsStorage {
   }
 
   private SQLiteDatabase openOrCreateWordsDatebase(String langCode) {
-    SQLiteDatabase db = mContext.openOrCreateDatabase(langCode + ".sqlite3",
-            Context.MODE_PRIVATE, null);
+    SQLiteDatabase db = mContext.openOrCreateDatabase(
+            getDBName(langCode, category),
+            Context.MODE_PRIVATE,
+            null);
 
     if (!checkTableExist(db, "words")) {
       db.execSQL(CREATE_TABLE);
@@ -127,6 +165,8 @@ public class WordsStorage {
     return exist;
   }
 
+  // we don't need category in this case because serverID implies the
+  // category id + word key.
   public void getWordFromServer(String serverID, String langCode,
           DownloadWordListener listener) {
 
@@ -231,6 +271,9 @@ public class WordsStorage {
   }
 
   private void insertWordToLocal(Word word) {
+    if (word.category != this.category) {
+      throw new IllegalArgumentException("category miss-matched");
+    }
     SQLiteDatabase db = openOrCreateWordsDatebase(word.languageCode);
 
     ContentValues values = new ContentValues();
@@ -248,8 +291,11 @@ public class WordsStorage {
             SQLiteDatabase.CONFLICT_REPLACE);
   }
 
-  public void downloadDB(String langCode, int categoryID,
-          final DownloadDBListener listener) {
+  public boolean deleteDB(String langCode) {
+    return mContext.getDatabasePath(getDBName(langCode, category)).delete();
+  }
+
+  public void downloadDB(String langCode, final DownloadDBListener listener) {
 
     if (!NetworkUtils.isNetworkAvailable(mContext)) {
       listener.onError(DownloadDBListener.NETWORK_ERROR,
@@ -257,11 +303,11 @@ public class WordsStorage {
       return;
     }
 
-    String DBName = langCode + ".sqlite3";
+    String dbName = langCode + ".sqlite3";
 
     Intent intent = new Intent(mContext, DownloadService.class);
     intent.putExtra("url", "http://api.vosie.org/wikicards/" + langCode + "/" +
-            getCategoryName(categoryID) + "/" + DBName);
+            CATEGORY_NAMES[Constants.CATEGORY_COUNTRY] + "/" + dbName);
 
     intent.putExtra("receiver", new ResultReceiver(new Handler()) {
       @Override
@@ -298,13 +344,9 @@ public class WordsStorage {
       }
 
     });
-
-    intent.putExtra("destination", mContext.getDatabasePath(DBName).getPath());
+    File dbFile = mContext.getDatabasePath(getDBName(langCode, category));
+    intent.putExtra("destination", dbFile.getPath());
     mContext.startService(intent);
 
-  }
-
-  private String getCategoryName(int id) {
-    return id == 0 ? "country" : "";
   }
 }
