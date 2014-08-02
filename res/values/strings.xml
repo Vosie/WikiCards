@@ -6,8 +6,14 @@
     <string name="label_learning">Learning</string>
     <string name="label_licenses">Open Source Licenses</string>
     <string name="label_gplv3">GPLv3:</string>
+    <string name="label_mit">MIT:</string>
+    <string name="label_apache_license_v2">Apache License, Version 2.0 :</string>
     <string name="label_license_WikiCards">WikiCards</string>
     <string name="label_license_wikicards_url">(<a href="http://git.io/DzZMSA">http://git.io/DzZMSA</a>)</string>
+    <string name="label_license_flip">flip</string>
+    <string name="label_license_flip_url">(<a href="https://github.com/genzeb/flip">https://github.com/genzeb/flip</a>)</string>
+    <string name="label_license_picasso">picasso</string>
+    <string name="label_license_picasso_url">(<a href="https://github.com/square/picasso">https://github.com/square/picasso</a>)</string>
     <string name="title_spinner">Languages</string>
     <string name="title_fromwiki">from Wikipedia</string>
     <string name="title_settings_activity">Settings of WikiCards</string>
@@ -45,5 +51,11 @@
     <string name="msg_empty_database">Database is empty</string>
     <string name="msg_partial_downloaded">Partial downloaded</string>
     <string name="msg_database_downloaded">Fully downloaded</string>
+    <string name="text_description">Description</string>
+    <string name="button_go_to_wiki">Go to Wikipedia</string>
+    <string name="imageview_content_description_flag">Flag</string>
+    <string name="icon_arrow_right">right</string>
+    <string name="icon_arrow_left">left</string>
+    <string name="label_card_error_msg">Sorry, We can\'t show this card now.</string>
 
 </resources>

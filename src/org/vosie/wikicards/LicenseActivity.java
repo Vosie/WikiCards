@@ -6,7 +6,7 @@ import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 public class LicenseActivity extends Activity {
-  private int[] links = { R.id.url_wikicards };
+  private int[] links = { R.id.url_wikicards, R.id.url_flip, R.id.url_picasso };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {

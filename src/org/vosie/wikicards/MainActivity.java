@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
@@ -45,6 +46,11 @@ public class MainActivity extends Activity implements Constants {
     initLangugeSpinner();
     initCardModeButton();
     initDownloadDB();
+    initTypeFace();
+  }
+
+  private void initTypeFace() {
+    Settings.iconFont = Typeface.createFromAsset(getAssets(), "icomoon.ttf");
   }
 
   private void initDownloadDB() {
