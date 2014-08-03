@@ -26,4 +26,48 @@
         android:text="@string/label_license_wikicards_url"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_1"
+        android:text="@string/label_mit"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_2"
+        android:text="@string/label_license_flip"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/url_flip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_2"
+        android:text="@string/label_license_flip_url"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_1"
+        android:text="@string/label_apache_license_v2"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_2"
+        android:text="@string/label_license_picasso"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/url_picasso"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_2"
+        android:text="@string/label_license_picasso_url"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </LinearLayout>
