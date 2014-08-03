@@ -34,9 +34,9 @@
     <string name="dialog_desc_http_error">Sorry, the connection between your device to our server had some problems. We will check them as soon as possible.</string>
     <string name="dialog_title_internal_error">Error</string>
     <string name="dialog_desc_internal_error">There is something wrong to save the data into your device. We will check them as soon as possible.</string>
-    <string name="button_download">Download Button</string>
-    <string name="button_delete">Delete Button</string>
-    <string name="button_options">Options Button</string>
+    <string name="button_download">Download</string>
+    <string name="button_delete">Delete</string>
+    <string name="button_options">Options</string>
     <string name="dialog_title_confirm_delete_db">Delete Database</string>
     <string name="dialog_desc_confirm_delete_db">Do you really want to delete the following database?</string>
     <string name="dialog_title_download_offline_db">Download Offline Database</string>
