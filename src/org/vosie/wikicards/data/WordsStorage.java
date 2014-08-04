@@ -55,9 +55,9 @@ public class WordsStorage {
     this.category = category;
 
     if (!checkBaseDBExist()) {
-      mContext.openOrCreateDatabase(getDBName("base", category),
+      SQLiteDatabase db = mContext.openOrCreateDatabase(getDBName("base", category),
               Context.MODE_PRIVATE, null);
-
+      db.close();
       InputStream input = null;
       OutputStream output = null;
       try {
@@ -87,30 +87,30 @@ public class WordsStorage {
             getDBName("base", category),
             Context.MODE_PRIVATE,
             null);
+    try {
+      Cursor cursor = db.rawQuery("select serverID from words", null);
 
-    Cursor cursor = db.rawQuery("select serverID from words", null);
+      while (cursor.moveToNext()) {
+        serverIDs.add(cursor.getString(0));
+      }
 
-    while (cursor.moveToNext()) {
-      serverIDs.add(cursor.getString(0));
+      return serverIDs.toArray(new String[0]);
+    } finally {
+      db.close();
     }
-
-    return serverIDs.toArray(new String[0]);
   }
 
   public int getRowCount(String langCode) {
     SQLiteDatabase db = openOrCreateWordsDatebase(langCode);
-
-    String sql = "SELECT COUNT(serverID) FROM words";
-
-    Cursor cursor = db.rawQuery(sql, null);
     try {
-      if (cursor.moveToFirst()) {
-        return cursor.getInt(0);
-      } else {
-        return 0;
+      Cursor cursor = db.rawQuery("SELECT COUNT(serverID) FROM words", null);
+      try {
+        return cursor.moveToFirst() ? cursor.getInt(0) : 0;
+      } finally {
+        cursor.close();
       }
     } finally {
-      cursor.close();
+      db.close();
     }
   }
 
@@ -121,26 +121,33 @@ public class WordsStorage {
   public Word getWordFromLocal(String serverID, String langCode) {
 
     SQLiteDatabase db = openOrCreateWordsDatebase(langCode);
+    try {
+      Cursor cursor = db.rawQuery("select * from words where serverID = ?",
+              new String[] { serverID });
 
-    Cursor cursor = db.rawQuery("select * from words where serverID = ?",
-            new String[] { serverID });
+      Word word = null;
+      try {
 
-    Word word = null;
-    if (cursor.moveToFirst()) {
-      word = new Word();
-      word.serverID = cursor.getString(cursor.getColumnIndex("serverID"));
-      word.label = cursor.getString(cursor.getColumnIndex("label"));
-      word.languageCode = cursor.getString(
-              cursor.getColumnIndex("languageCode"));
-      word.url = cursor.getString(cursor.getColumnIndex("url"));
-      word.latitude = cursor.getString(cursor.getColumnIndex("latitude"));
-      word.longitude = cursor.getString(cursor.getColumnIndex("longitude"));
-      word.imageURL = cursor.getString(cursor.getColumnIndex("imageURL"));
-      word.shortDesc = cursor.getString(cursor.getColumnIndex("shortDesc"));
-      word.category = cursor.getInt(cursor.getColumnIndex("category"));
+        if (cursor.moveToFirst()) {
+          word = new Word();
+          word.serverID = cursor.getString(cursor.getColumnIndex("serverID"));
+          word.label = cursor.getString(cursor.getColumnIndex("label"));
+          word.languageCode = cursor.getString(
+                  cursor.getColumnIndex("languageCode"));
+          word.url = cursor.getString(cursor.getColumnIndex("url"));
+          word.latitude = cursor.getString(cursor.getColumnIndex("latitude"));
+          word.longitude = cursor.getString(cursor.getColumnIndex("longitude"));
+          word.imageURL = cursor.getString(cursor.getColumnIndex("imageURL"));
+          word.shortDesc = cursor.getString(cursor.getColumnIndex("shortDesc"));
+          word.category = cursor.getInt(cursor.getColumnIndex("category"));
+        }
+      } finally {
+        cursor.close();
+      }
+      return word;
+    } finally {
+      db.close();
     }
-    cursor.close();
-    return word;
   }
 
   private SQLiteDatabase openOrCreateWordsDatebase(String langCode) {
@@ -160,9 +167,11 @@ public class WordsStorage {
   private boolean checkTableExist(SQLiteDatabase db, String tableName) {
     Cursor c = db.rawQuery("SELECT * FROM sqlite_master WHERE type='table' " +
             "AND name='" + tableName + "';", null);
-    boolean exist = c.getCount() > 0;
-    c.close();
-    return exist;
+    try {
+      return c.getCount() > 0;
+    } finally {
+      c.close();
+    }
   }
 
   // we don't need category in this case because serverID implies the
@@ -275,20 +284,23 @@ public class WordsStorage {
       throw new IllegalArgumentException("category miss-matched");
     }
     SQLiteDatabase db = openOrCreateWordsDatebase(word.languageCode);
+    try {
+      ContentValues values = new ContentValues();
+      values.put("serverID", word.serverID);
+      values.put("label", word.label);
+      values.put("languageCode", word.languageCode);
+      values.put("url", word.url);
+      values.put("latitude", word.latitude);
+      values.put("longitude", word.longitude);
+      values.put("imageURL", word.imageURL);
+      values.put("shortDesc", word.shortDesc);
+      values.put("category", word.category);
 
-    ContentValues values = new ContentValues();
-    values.put("serverID", word.serverID);
-    values.put("label", word.label);
-    values.put("languageCode", word.languageCode);
-    values.put("url", word.url);
-    values.put("latitude", word.latitude);
-    values.put("longitude", word.longitude);
-    values.put("imageURL", word.imageURL);
-    values.put("shortDesc", word.shortDesc);
-    values.put("category", word.category);
-
-    db.insertWithOnConflict("words", null, values,
-            SQLiteDatabase.CONFLICT_REPLACE);
+      db.insertWithOnConflict("words", null, values,
+              SQLiteDatabase.CONFLICT_REPLACE);
+    } finally {
+      db.close();
+    }
   }
 
   public boolean deleteDB(String langCode) {
