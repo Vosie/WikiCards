@@ -26,4 +26,8 @@ public class LanguageUtils {
     }
     return ret;
   }
+
+  public static String getDefaultLangCode() {
+    return Locale.getDefault().getLanguage();
+  }
 }

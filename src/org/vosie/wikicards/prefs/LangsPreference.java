@@ -1,5 +1,7 @@
 package org.vosie.wikicards.prefs;
 
+import java.util.Arrays;
+
 import org.vosie.wikicards.Constants;
 import org.vosie.wikicards.utils.LanguageUtils;
 
@@ -25,7 +27,13 @@ public class LangsPreference extends ListPreference {
 
   private void initValue() {
     if (null == getValue()) {
-      setValue(Constants.SUPPORTED_LANGUAGES[0]);
+      String defLang = LanguageUtils.getDefaultLangCode();
+
+      if (Arrays.asList(Constants.SUPPORTED_LANGUAGES).indexOf(defLang) < 0) {
+        setValue(Constants.SUPPORTED_LANGUAGES[0]);
+      } else {
+        setValue(defLang);
+      }
     }
     this.setDefaultValue(getValue());
     this.setSummary(getValue());
