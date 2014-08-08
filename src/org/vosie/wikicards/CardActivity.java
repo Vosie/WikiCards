@@ -5,11 +5,6 @@ import org.vosie.wikicards.data.Word;
 import org.vosie.wikicards.data.WordsStorage;
 import org.vosie.wikicards.utils.ErrorUtils;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-import com.tekle.oss.android.animation.AnimationFactory;
-import com.tekle.oss.android.animation.AnimationFactory.FlipDirection;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,6 +19,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.tekle.oss.android.animation.AnimationFactory;
+import com.tekle.oss.android.animation.AnimationFactory.FlipDirection;
 
 public class CardActivity extends Activity {
 
@@ -52,6 +53,18 @@ public class CardActivity extends Activity {
     initVariables();
     initViews();
     loadWordAndShow(serverIDs[currentIndex]);
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    EasyTracker.getInstance(this).activityStart(this);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    EasyTracker.getInstance(this).activityStop(this);
   }
 
   private void initVariables() {
