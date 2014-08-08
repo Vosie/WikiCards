@@ -92,9 +92,13 @@ public class MainActivity extends Activity implements Constants {
   }
 
   private void initPreferences() {
+    String defLang = LanguageUtils.getDefaultLangCode();
+
+    if (Arrays.asList(SUPPORTED_LANGUAGES).indexOf(defLang) < 0) {
+      defLang = SUPPORTED_LANGUAGES[0];
+    }
     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-    Settings.nativeTongue = sp.getString(PREF_KEY_NATIVE_TONGUE,
-            SUPPORTED_LANGUAGES[0]);
+    Settings.nativeTongue = sp.getString(PREF_KEY_NATIVE_TONGUE, defLang);
     Settings.contributeRecordings = sp.getBoolean(PREF_KEY_CONTRIBUTE_SND,
             true);
   }
