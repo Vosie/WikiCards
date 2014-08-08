@@ -57,5 +57,7 @@
     <string name="icon_arrow_right">right</string>
     <string name="icon_arrow_left">left</string>
     <string name="label_card_error_msg">Sorry, We can\'t show this card now.</string>
+    <string name="pref_title_changelog">Change Logs</string>
+    <string name="pref_title_reportbug">Report Bugs</string>
 
 </resources>
