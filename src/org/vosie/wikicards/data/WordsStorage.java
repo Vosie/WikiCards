@@ -54,7 +54,7 @@ public class WordsStorage {
     mContext = context;
     this.category = category;
 
-    if (!checkBaseDBExist()) {
+    if (!checkDBExist("base")) {
       SQLiteDatabase db = mContext.openOrCreateDatabase(getDBName("base", category),
               Context.MODE_PRIVATE, null);
       db.close();
@@ -74,8 +74,8 @@ public class WordsStorage {
     }
   }
 
-  private boolean checkBaseDBExist() {
-    File db = mContext.getDatabasePath(getDBName("base", category));
+  private boolean checkDBExist(String lang) {
+    File db = mContext.getDatabasePath(getDBName(lang, category));
     return db.exists() && db.isFile();
   }
 
@@ -101,6 +101,9 @@ public class WordsStorage {
   }
 
   public int getRowCount(String langCode) {
+    if (!checkDBExist(langCode)) {
+      return 0;
+    }
     SQLiteDatabase db = openOrCreateWordsDatebase(langCode);
     try {
       Cursor cursor = db.rawQuery("SELECT COUNT(serverID) FROM words", null);

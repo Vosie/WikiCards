@@ -121,6 +121,17 @@ public class DialogUtils {
   }
 
   /**
+   * show alert dialog only with message and make this dialog cancelable.
+   * @param ctx
+   * @param title
+   * @param msg
+   */
+  public static void showAlertDialog(Context ctx, int title, int msg) {
+    showAlertDialog(ctx, ctx.getResources().getString(title),
+            ctx.getResources().getText(msg), true, null, null);
+  }
+
+  /**
    * shows an alert dialog with built-in click callback function to close the
    * activity or not.
    * 

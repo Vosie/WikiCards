@@ -3,11 +3,15 @@ package org.vosie.wikicards;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.vosie.wikicards.data.WordsStorage;
+import org.vosie.wikicards.utils.DialogUtils;
 import org.vosie.wikicards.utils.LanguageUtils;
+import org.vosie.wikicards.utils.NetworkUtils;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,14 +24,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class MainActivity extends Activity implements Constants {
 
   private Spinner languageSpinner;
   private Button cardModeButton;
+  private WordsStorage storage;
+  private int totalRecords;
+  private BroadcastReceiver networkNotifier;
+  private LangListAdapter langAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,7 @@ public class MainActivity extends Activity implements Constants {
 
   @Override
   protected void onResume() {
+    this.initNetworkBroadcastReceiver();
     super.onResume();
     // We need to read preference here because user may change the settings in
     // SettingsActivity which goes back to this activity.
@@ -56,11 +65,31 @@ public class MainActivity extends Activity implements Constants {
     EasyTracker.getInstance(this).activityStop(this);
   }
 
+  @Override
+  protected void onPause() {
+    NetworkUtils.removeInternetStateNotifier(this, networkNotifier);
+    super.onPause();
+  }
+
   private void initViews() {
     initLangugeSpinner();
     initCardModeButton();
     initDownloadDB();
     initTypeFace();
+  }
+
+  private void initNetworkBroadcastReceiver() {
+    networkNotifier = NetworkUtils.notifyInternetState(this, new Runnable() {
+      @Override
+      public void run() {
+        langAdapter.notifyDataSetChanged();
+      }
+    }, new Runnable() {
+      @Override
+      public void run() {
+        langAdapter.notifyDataSetChanged();
+      }
+    });
   }
 
   private void initTypeFace() {
@@ -78,13 +107,61 @@ public class MainActivity extends Activity implements Constants {
             });
   }
 
+  private int getRowCount(String langCode) {
+    if (null == storage) {
+      storage = new WordsStorage(this, CATEGORY_COUNTRY);
+    }
+    return storage.getRowCount(langCode);
+  }
+
+  private int getTotalRecords() {
+    if (0 == totalRecords) {
+      totalRecords = storage.getRowCount("base");
+    }
+    return totalRecords;
+  }
+
+  private void fillData(View ui, String langCode) {
+    boolean hasInternet = NetworkUtils.isNetworkAvailable(this);
+    String langName = LanguageUtils.getLocalizedLanguageName(langCode);
+    int rows = getRowCount(langCode);
+    int totalCount = getTotalRecords();
+    String dbStatus = " - (" + rows + "/" + totalCount + ")";
+    TextView label = (TextView) ui.findViewById(R.id.label_lang_name);
+    TextView status = (TextView) ui.findViewById(R.id.label_db_status);
+    label.setText(langName);
+    if (0 == rows) {
+      // Show empty database when we have internet connction. Otherwise, show
+      // unselectable message.
+      status.setText(hasInternet ? getString(R.string.msg_empty_database) :
+              getString(R.string.msg_empty_database_unselectable));
+    } else if (rows == totalCount) {
+      status.setText(getString(R.string.msg_database_downloaded) + dbStatus);
+    } else {
+      status.setText(getString(R.string.msg_partial_downloaded) + dbStatus);
+    }
+    // consume the click event so that dialog cannot receive it.
+    ui.setClickable(!hasInternet && rows == 0);
+  }
+
   private void initLangugeSpinner() {
-    String[] langNames = LanguageUtils.getLocalizedLanguageNames(
-            SUPPORTED_LANGUAGES);
+    langAdapter = new LangListAdapter(this,
+            new LangListAdapter.UIHandler() {
+
+              @Override
+              public void handleButtonClick(int id, String langCode) {
+                // we don't need this.
+
+              }
+
+              @Override
+              public void customizeUI(View ui, String langCode) {
+                fillData(ui, langCode);
+              }
+            });
 
     languageSpinner = (Spinner) this.findViewById(R.id.spinner_language);
-    languageSpinner.setAdapter(new ArrayAdapter<String>(this,
-            R.layout.large_spinner_item, langNames));
+    languageSpinner.setAdapter(langAdapter);
 
     int selectedIdx = Arrays.asList(SUPPORTED_LANGUAGES).indexOf(
             readSelectedLanguageCode());
@@ -141,13 +218,23 @@ public class MainActivity extends Activity implements Constants {
     return Settings.selectedLanguageCode;
   }
 
+  private void openCardMode() {
+    if (NetworkUtils.isNetworkAvailable(this) ||
+            getRowCount(Settings.selectedLanguageCode) > 0) {
+      openActivity(MainActivity.this, CardActivity.class);
+    } else {
+      DialogUtils.showAlertDialog(this, R.string.app_name,
+              R.string.msg_empty_database_unable_to_view);
+    }
+  }
+
   private void initCardModeButton() {
     cardModeButton = (Button) findViewById(R.id.button_cardmode);
     cardModeButton.setOnClickListener(new OnClickListener() {
 
       @Override
       public void onClick(View arg0) {
-        openActivity(MainActivity.this, CardActivity.class);
+        openCardMode();
       }
     });
   }

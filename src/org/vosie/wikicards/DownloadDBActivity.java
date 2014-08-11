@@ -7,9 +7,11 @@ import org.vosie.wikicards.utils.DialogMenuListener;
 import org.vosie.wikicards.utils.DialogUtils;
 import org.vosie.wikicards.utils.ErrorUtils;
 import org.vosie.wikicards.utils.LanguageUtils;
+import org.vosie.wikicards.utils.NetworkUtils;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class DownloadDBActivity extends ListActivity implements Constants {
   private LangListAdapter adapter;
   private int totalCount;
   private WordsStorage storage;
+  private BroadcastReceiver networkNotifier;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,31 @@ public class DownloadDBActivity extends ListActivity implements Constants {
     EasyTracker.getInstance(this).activityStop(this);
   }
 
+  protected void onResume() {
+    initNetworkNotifier();
+    super.onResume();
+  }
+
+  @Override
+  protected void onPause() {
+    NetworkUtils.removeInternetStateNotifier(this, networkNotifier);
+    super.onPause();
+  }
+
+  private void initNetworkNotifier() {
+    networkNotifier = NetworkUtils.notifyInternetState(this, new Runnable() {
+      @Override
+      public void run() {
+        adapter.notifyDataSetChanged();
+      }
+    }, new Runnable() {
+      @Override
+      public void run() {
+        adapter.notifyDataSetChanged();
+      }
+    });
+  }
+
   private int getRowCount(String langCode) {
     return storage.getRowCount(langCode);
   }
@@ -58,13 +86,17 @@ public class DownloadDBActivity extends ListActivity implements Constants {
    *          the language code which may be en, zh, ja.
    */
   private void fillData(View ui, String langCode) {
+    boolean hasInternet = NetworkUtils.isNetworkAvailable(this);
     String langName = LanguageUtils.getLocalizedLanguageName(langCode);
     int rows = getRowCount(langCode);
     String dbStatus = " - (" + rows + "/" + totalCount + ")";
     ((TextView) ui.findViewById(R.id.label_lang_name)).setText(langName);
     if (0 == rows) {
       // we show download button when no data in db.
-      ui.findViewById(R.id.button_download).setVisibility(View.VISIBLE);
+      View downloadBtn = ui.findViewById(R.id.button_download);
+      downloadBtn.setVisibility(View.VISIBLE);
+      // enable download button only when we have internet connection
+      downloadBtn.setEnabled(hasInternet);
       ((TextView) ui.findViewById(R.id.label_db_status)).setText(
               getString(R.string.msg_empty_database));
     } else if (rows == totalCount) {
@@ -72,10 +104,15 @@ public class DownloadDBActivity extends ListActivity implements Constants {
       ui.findViewById(R.id.button_delete).setVisibility(View.VISIBLE);
       ((TextView) ui.findViewById(R.id.label_db_status)).setText(
               getString(R.string.msg_database_downloaded) + dbStatus);
-    } else {
+    } else if (hasInternet) {
       // we show option menu which has delete and download when db is partial
       // downloaded.
       ui.findViewById(R.id.button_options).setVisibility(View.VISIBLE);
+      ((TextView) ui.findViewById(R.id.label_db_status)).setText(
+              getString(R.string.msg_partial_downloaded) + dbStatus);
+    } else {
+      // only show delete button when we don't have internet connection.
+      ui.findViewById(R.id.button_delete).setVisibility(View.VISIBLE);
       ((TextView) ui.findViewById(R.id.label_db_status)).setText(
               getString(R.string.msg_partial_downloaded) + dbStatus);
     }
