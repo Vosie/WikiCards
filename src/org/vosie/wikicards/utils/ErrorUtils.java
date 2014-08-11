@@ -4,6 +4,7 @@ import org.vosie.wikicards.R;
 import org.vosie.wikicards.data.DownloadWordListener;
 
 import android.app.Activity;
+import android.content.Context;
 
 public class ErrorUtils {
 
@@ -14,7 +15,7 @@ public class ErrorUtils {
     DialogUtils.showAlertDialog(ctx, title, desc, false, closeSelf);
   }
   
-  public static String getErrorTitle(Activity ctx,int errorType){
+  public static String getErrorTitle(Context ctx,int errorType){
     String title = "";
     switch (errorType) {
       case DownloadWordListener.NETWORK_ERROR:
@@ -30,7 +31,7 @@ public class ErrorUtils {
     return title;
   }
   
-  public static String getErrorDesc(Activity ctx,int errorType){
+  public static String getErrorDesc(Context ctx,int errorType){
     String desc = "";
     switch (errorType) {
       case DownloadWordListener.NETWORK_ERROR:
