@@ -19,6 +19,16 @@
                 android:action="android.intent.action.VIEW"
                 android:data="http://blog.vosie.org/" />
         </Preference>
+        <Preference android:title="@string/pref_title_changelog" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.vosie.org/mantis/changelog_page.php?project_id=2" />
+        </Preference>
+        <Preference android:title="@string/pref_title_reportbug" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://www.vosie.org/mantis/bug_report_page.php?project_id=2" />
+        </Preference>
         <Preference android:title="@string/pref_title_license" >
             <intent
                 android:targetClass="org.vosie.wikicards.LicenseActivity"
