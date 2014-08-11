@@ -51,6 +51,7 @@
     <string name="msg_empty_database">Database is empty</string>
     <string name="msg_partial_downloaded">Partial downloaded</string>
     <string name="msg_database_downloaded">Fully downloaded</string>
+    <string name="msg_empty_database_unselectable">Unable to use it without Internet connection</string>
     <string name="text_description">Description</string>
     <string name="button_go_to_wiki">Go to Wikipedia</string>
     <string name="imageview_content_description_flag">Flag</string>
@@ -59,5 +60,6 @@
     <string name="label_card_error_msg">Sorry, We can\'t show this card now.</string>
     <string name="pref_title_changelog">Change Logs</string>
     <string name="pref_title_reportbug">Report Bugs</string>
+    <string name="msg_empty_database_unable_to_view">The selected language is empty. We cannot open it for you without Internet connection. Please turn on Internet connection or choose a language with offline database</string>
 
 </resources>
