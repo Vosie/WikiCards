@@ -18,12 +18,8 @@
     <string name="title_fromwiki">from Wikipedia</string>
     <string name="title_settings_activity">Settings of WikiCards</string>
     <string name="button_cardmode">Start to Learn</string>
-    <string name="button_stared">Stared Words</string>
     <string name="button_downloaddb">Download Offline DB</string>
     <string name="pref_title_license">Open Source Licenses</string>
-    <string name="pref_desc_contribute_recordings_on">Thanks for your contribution of recordings. That really helps.</string>
-    <string name="pref_desc_contribute_recordings_off">Please turn this on to help others learn from your native tongue.</string>
-    <string name="pref_title_contribute_recordings">Contribute My Recordings</string>
     <string name="pref_title_blog">Vosie\'s Blog</string>
     <string name="pref_title_others">Others</string>
     <string name="pref_title_cards">WikiCards</string>

@@ -53,13 +53,6 @@
         android:text="@string/button_cardmode" />
 
     <Button
-        android:id="@+id/button_stared"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/button_stared"
-        android:text="@string/button_stared" />
-
-    <Button
         android:id="@+id/button_downloaddb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
