@@ -6,6 +6,7 @@ import org.vosie.wikicards.utils.DialogMenuItem;
 import org.vosie.wikicards.utils.DialogMenuListener;
 import org.vosie.wikicards.utils.DialogUtils;
 import org.vosie.wikicards.utils.ErrorUtils;
+import org.vosie.wikicards.utils.IconFontUtils;
 import org.vosie.wikicards.utils.LanguageUtils;
 import org.vosie.wikicards.utils.NetworkUtils;
 
@@ -186,13 +187,13 @@ public class DownloadDBActivity extends ListActivity implements Constants {
    */
   private void showOptions(final String langCode) {
     // The download menu id's is 0.
-    DialogMenuItem downloadMenu = DialogMenuItem.create(0,
-            R.drawable.ic_download,
-            getString(R.string.button_download));
+    DialogMenuItem downloadMenu = DialogMenuItem.create(0, 0,
+            IconFontUtils.get(IconFontUtils.DOWNLOAD) + " " +
+                    getString(R.string.button_download));
     // The delete menu's id is 1.
-    DialogMenuItem deleteMenu = DialogMenuItem.create(1,
-            android.R.drawable.ic_menu_delete,
-            getString(R.string.button_delete));
+    DialogMenuItem deleteMenu = DialogMenuItem.create(1, 0,
+            IconFontUtils.get(IconFontUtils.REMOVE) + " " +
+                    getString(R.string.button_delete));
     DialogUtils.showMenuDialog(this,
             R.drawable.ic_launcher,
             R.string.dialog_title_option_menu,

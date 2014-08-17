@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:padding="5dp" >
 
     <LinearLayout
         android:layout_width="0dp"
@@ -15,7 +16,7 @@
             android:id="@+id/label_lang_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/label_db_status"
@@ -24,28 +25,34 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-    <ImageButton
+    <Button
         android:id="@+id/button_download"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_blue"
         android:contentDescription="@string/button_download"
-        android:src="@drawable/ic_download"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/button_text"
         android:visibility="gone" />
 
-    <ImageButton
+    <Button
         android:id="@+id/button_delete"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_red"
         android:contentDescription="@string/button_delete"
-        android:src="@android:drawable/ic_menu_delete"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/button_text"
         android:visibility="gone" />
 
-    <ImageButton
+    <Button
         android:id="@+id/button_options"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_green"
         android:contentDescription="@string/button_options"
-        android:src="@android:drawable/ic_menu_preferences"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/button_text"
         android:visibility="gone" />
 
 </LinearLayout>

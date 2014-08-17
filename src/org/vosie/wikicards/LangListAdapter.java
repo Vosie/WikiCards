@@ -1,11 +1,14 @@
 package org.vosie.wikicards;
 
+import org.vosie.wikicards.utils.IconFontUtils;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 
 public class LangListAdapter extends BaseAdapter implements Constants,
                                                 OnClickListener {
@@ -54,9 +57,21 @@ public class LangListAdapter extends BaseAdapter implements Constants,
               null);
     }
 
-    View delBtn = vwRet.findViewById(R.id.button_delete);
-    View dldBtn = vwRet.findViewById(R.id.button_download);
-    View optBtn = vwRet.findViewById(R.id.button_options);
+    Button delBtn = (Button) vwRet.findViewById(R.id.button_delete);
+    Button dldBtn = (Button) vwRet.findViewById(R.id.button_download);
+    Button optBtn = (Button) vwRet.findViewById(R.id.button_options);
+
+    // set text
+    delBtn.setText(IconFontUtils.get(IconFontUtils.REMOVE,
+            context.getString(R.string.button_delete)));
+    dldBtn.setText(IconFontUtils.get(IconFontUtils.DOWNLOAD,
+            context.getString(R.string.button_download)));
+    optBtn.setText(IconFontUtils.get(IconFontUtils.WRENCH,
+            context.getString(R.string.button_options)));
+    delBtn.setTypeface(Settings.iconFont);
+    dldBtn.setTypeface(Settings.iconFont);
+    optBtn.setTypeface(Settings.iconFont);
+
     // override listeners
     delBtn.setOnClickListener(this);
     dldBtn.setOnClickListener(this);
