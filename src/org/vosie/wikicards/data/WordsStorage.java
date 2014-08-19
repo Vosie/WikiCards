@@ -272,11 +272,15 @@ public class WordsStorage {
         word.shortDesc = jsonWord.getString("shortDesc");
         word.category = jsonWord.getInt("category");
         return word;
-      } catch (JSONException | IOException e) {
+      } catch (JSONException e) {
         if (mListener != null) {
           mListener.onError(DownloadWordListener.INTERNAL_ERROR, e);
         }
         e.printStackTrace();
+      } catch (IOException e) {
+        if (mListener != null) {
+          mListener.onError(DownloadWordListener.INTERNAL_ERROR, e);
+        }
       }
       return null;
     }
