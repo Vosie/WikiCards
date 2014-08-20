@@ -140,8 +140,6 @@ public class MainActivity extends Activity implements Constants {
     } else {
       status.setText(getString(R.string.msg_partial_downloaded) + dbStatus);
     }
-    // consume the click event so that dialog cannot receive it.
-    ui.setClickable(!hasInternet && rows == 0);
   }
 
   private void initLangugeSpinner() {
