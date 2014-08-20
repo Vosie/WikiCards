@@ -4,6 +4,7 @@ import org.vosie.wikicards.data.DownloadWordListener;
 import org.vosie.wikicards.data.Word;
 import org.vosie.wikicards.data.WordsStorage;
 import org.vosie.wikicards.utils.ErrorUtils;
+import org.vosie.wikicards.utils.IconFontUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -85,6 +86,8 @@ public class CardActivity extends Activity {
     nextButton = (Button) findViewById(R.id.button_next);
     indexTextView = (TextView) findViewById(R.id.textview_index);
 
+    previousButton.setText(IconFontUtils.get(IconFontUtils.ARROW_LEFT));
+    nextButton.setText(IconFontUtils.get(IconFontUtils.ARROW_RIGHT));
     previousButton.setTypeface(Settings.iconFont);
     nextButton.setTypeface(Settings.iconFont);
 
@@ -187,6 +190,8 @@ public class CardActivity extends Activity {
     Button goToWikiButton =
             (Button) currentCard.findViewById(R.id.button_go_to_wiki);
 
+    goToWikiButton.setText(IconFontUtils.get(IconFontUtils.WIKIPEDIA));
+    goToWikiButton.setTypeface(Settings.iconFont);
     wordTextView.setText(word.label);
     loadImage(word.imageURL);
     descriptionTextView.setText(word.shortDesc);

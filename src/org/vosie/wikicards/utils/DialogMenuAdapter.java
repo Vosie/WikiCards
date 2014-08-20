@@ -1,5 +1,7 @@
 package org.vosie.wikicards.utils;
 
+import org.vosie.wikicards.Settings;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,13 +48,15 @@ public class DialogMenuAdapter extends BaseAdapter {
     TextView tv = (TextView) convertView;
     if (null == tv) {
       tv = new TextView(context, null);
-      tv.setPadding(10, 20, 10, 20);
+      tv.setPadding(20, 30, 20, 30);
       tv.setCompoundDrawablePadding(10);
       tv.setTextAppearance(context,
               android.R.style.TextAppearance_DeviceDefault_Large);
+      tv.setTypeface(Settings.iconFont);
     }
     DialogMenuItem menu = menus[position];
     tv.setText(menu.text);
+
     if (menu.icon > 0) {
       tv.setCompoundDrawablesWithIntrinsicBounds(menu.icon, 0, 0, 0);
     }
