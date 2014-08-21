@@ -11,6 +11,24 @@ import android.content.DialogInterface.OnClickListener;
 
 public class DialogUtils {
 
+  protected static DialogUtils instance;
+
+  public static DialogUtils get() {
+    synchronized (DialogUtils.class) {
+      if (null == instance) {
+        instance = new DialogUtils();
+      }
+    }
+    return instance;
+  }
+
+  /**
+   * The constructor of this class is only used by protected scope.
+   */
+  protected DialogUtils() {
+
+  }
+
   /**
    * show a confirm dialog
    * 
@@ -34,7 +52,7 @@ public class DialogUtils {
    *          the callback function which will be called when user cancels it or
    *          press cancel button.
    */
-  public static void showConfirmDialog(Context ctx, int icon,
+  public void showConfirmDialog(Context ctx, int icon,
           CharSequence title, CharSequence desc,
           CharSequence okText, CharSequence cancelText, boolean cancelable,
           DialogInterface.OnClickListener click,
@@ -61,7 +79,7 @@ public class DialogUtils {
     builder.show();
   }
 
-  public static void showConfirmDialog(Context ctx, int icon,
+  public void showConfirmDialog(Context ctx, int icon,
           CharSequence title, CharSequence desc, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
@@ -71,7 +89,7 @@ public class DialogUtils {
             ctx.getString(android.R.string.cancel), cancelable, click, cancel);
   }
 
-  public static void showConfirmDialog(Context ctx, int icon,
+  public void showConfirmDialog(Context ctx, int icon,
           int title, int desc, int okText, int cancelText, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
@@ -81,7 +99,7 @@ public class DialogUtils {
             click, cancel);
   }
 
-  public static void showConfirmDialog(Context ctx, int icon,
+  public void showConfirmDialog(Context ctx, int icon,
           int title, int desc, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
@@ -107,7 +125,7 @@ public class DialogUtils {
    *          the callback function which will be called when user cancels it or
    *          press cancel button.
    */
-  public static void showAlertDialog(Context ctx,
+  public void showAlertDialog(Context ctx,
           CharSequence title, CharSequence msg, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
@@ -122,11 +140,12 @@ public class DialogUtils {
 
   /**
    * show alert dialog only with message and make this dialog cancelable.
+   * 
    * @param ctx
    * @param title
    * @param msg
    */
-  public static void showAlertDialog(Context ctx, int title, int msg) {
+  public void showAlertDialog(Context ctx, int title, int msg) {
     showAlertDialog(ctx, ctx.getResources().getString(title),
             ctx.getResources().getText(msg), true, null, null);
   }
@@ -146,7 +165,7 @@ public class DialogUtils {
    * @param closeSelf
    *          to indicate if it should close activity when user click ok.
    */
-  public static void showAlertDialog(final Activity ctx,
+  public void showAlertDialog(final Activity ctx,
           CharSequence title, CharSequence msg, boolean cancelable,
           final boolean closeSelf) {
     showAlertDialog(ctx, title, msg, cancelable, new OnClickListener() {
@@ -160,7 +179,7 @@ public class DialogUtils {
     }, null);
   }
 
-  public static void showMenuDialog(Context ctx, int icon, int title,
+  public void showMenuDialog(Context ctx, int icon, int title,
           boolean cancelable, final DialogMenuItem[] menus,
           final DialogMenuListener listener) {
 
@@ -185,7 +204,7 @@ public class DialogUtils {
    * @param listener
    *          the click and cancel listener.
    */
-  public static void showMenuDialog(Context ctx, int icon,
+  public void showMenuDialog(Context ctx, int icon,
           CharSequence title, boolean cancelable, final DialogMenuItem[] menus,
           final DialogMenuListener listener) {
 

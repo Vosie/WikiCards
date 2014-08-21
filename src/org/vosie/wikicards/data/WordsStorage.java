@@ -182,7 +182,7 @@ public class WordsStorage {
   public void getWordFromServer(String serverID, String langCode,
           DownloadWordListener listener) {
 
-    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+    if (!NetworkUtils.get().isNetworkAvailable(mContext)) {
       listener.onError(DownloadWordListener.NETWORK_ERROR,
               new Exception("network is not available"));
       return;
@@ -316,7 +316,7 @@ public class WordsStorage {
 
   public void downloadDB(String langCode, final DownloadDBListener listener) {
 
-    if (!NetworkUtils.isNetworkAvailable(mContext)) {
+    if (!NetworkUtils.get().isNetworkAvailable(mContext)) {
       listener.onError(DownloadDBListener.NETWORK_ERROR,
               new Exception("network is not available"));
       return;

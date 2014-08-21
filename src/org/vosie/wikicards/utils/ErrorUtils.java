@@ -8,14 +8,32 @@ import android.content.Context;
 
 public class ErrorUtils {
 
-  public static void handleDownloadkError(Activity ctx, int errorType,
+  protected static ErrorUtils instance;
+
+  public static ErrorUtils get() {
+    synchronized (ErrorUtils.class) {
+      if (null == instance) {
+        instance = new ErrorUtils();
+      }
+    }
+    return instance;
+  }
+
+  /**
+   * The constructor of this class is only used by protected scope.
+   */
+  protected ErrorUtils() {
+
+  }
+
+  public void handleDownloadkError(Activity ctx, int errorType,
           boolean closeSelf) {
     String title = getErrorTitle(ctx, errorType);
     String desc = getErrorDesc(ctx, errorType);
-    DialogUtils.showAlertDialog(ctx, title, desc, false, closeSelf);
+    DialogUtils.get().showAlertDialog(ctx, title, desc, false, closeSelf);
   }
-  
-  public static String getErrorTitle(Context ctx,int errorType){
+
+  public String getErrorTitle(Context ctx, int errorType) {
     String title = "";
     switch (errorType) {
       case DownloadWordListener.NETWORK_ERROR:
@@ -30,8 +48,8 @@ public class ErrorUtils {
     }
     return title;
   }
-  
-  public static String getErrorDesc(Context ctx,int errorType){
+
+  public String getErrorDesc(Context ctx, int errorType) {
     String desc = "";
     switch (errorType) {
       case DownloadWordListener.NETWORK_ERROR:

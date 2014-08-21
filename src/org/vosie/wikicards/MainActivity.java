@@ -52,13 +52,13 @@ public class MainActivity extends Activity implements Constants {
     // SettingsActivity which goes back to this activity.
     this.initPreferences();
   }
-  
+
   @Override
   protected void onStart() {
     super.onStart();
     EasyTracker.getInstance(this).activityStart(this);
   }
-  
+
   @Override
   protected void onStop() {
     super.onStop();
@@ -67,7 +67,7 @@ public class MainActivity extends Activity implements Constants {
 
   @Override
   protected void onPause() {
-    NetworkUtils.removeInternetStateNotifier(this, networkNotifier);
+    NetworkUtils.get().removeInternetStateNotifier(this, networkNotifier);
     super.onPause();
   }
 
@@ -79,17 +79,18 @@ public class MainActivity extends Activity implements Constants {
   }
 
   private void initNetworkBroadcastReceiver() {
-    networkNotifier = NetworkUtils.notifyInternetState(this, new Runnable() {
-      @Override
-      public void run() {
-        langAdapter.notifyDataSetChanged();
-      }
-    }, new Runnable() {
-      @Override
-      public void run() {
-        langAdapter.notifyDataSetChanged();
-      }
-    });
+    networkNotifier = NetworkUtils.get().notifyInternetState(this,
+            new Runnable() {
+              @Override
+              public void run() {
+                langAdapter.notifyDataSetChanged();
+              }
+            }, new Runnable() {
+              @Override
+              public void run() {
+                langAdapter.notifyDataSetChanged();
+              }
+            });
   }
 
   private void initTypeFace() {
@@ -122,7 +123,7 @@ public class MainActivity extends Activity implements Constants {
   }
 
   private void fillData(View ui, String langCode) {
-    boolean hasInternet = NetworkUtils.isNetworkAvailable(this);
+    boolean hasInternet = NetworkUtils.get().isNetworkAvailable(this);
     String langName = LanguageUtils.getLocalizedLanguageName(langCode);
     int rows = getRowCount(langCode);
     int totalCount = getTotalRecords();
@@ -217,11 +218,11 @@ public class MainActivity extends Activity implements Constants {
   }
 
   private void openCardMode() {
-    if (NetworkUtils.isNetworkAvailable(this) ||
+    if (NetworkUtils.get().isNetworkAvailable(this) ||
             getRowCount(Settings.selectedLanguageCode) > 0) {
       openActivity(MainActivity.this, CardActivity.class);
     } else {
-      DialogUtils.showAlertDialog(this, R.string.app_name,
+      DialogUtils.get().showAlertDialog(this, R.string.app_name,
               R.string.msg_empty_database_unable_to_view);
     }
   }

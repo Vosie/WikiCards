@@ -8,7 +8,26 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkUtils {
-  public static boolean isNetworkAvailable(Context context) {
+  protected static NetworkUtils instance;
+
+  public static NetworkUtils get() {
+    synchronized (NetworkUtils.class) {
+      if (null == instance) {
+        instance = new NetworkUtils();
+      }
+    }
+
+    return instance;
+  }
+
+  /**
+   * The constructor of this class is only used by protected scope.
+   */
+  protected NetworkUtils() {
+
+  }
+
+  public boolean isNetworkAvailable(Context context) {
     ConnectivityManager connectivityManager =
             (ConnectivityManager)
             context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -20,11 +39,13 @@ public class NetworkUtils {
    * add network state change listener.
    *
    * @param ctx
-   * @param connectedRunnable called when network is connected.
-   * @param lostRunnable called when network is lost.
+   * @param connectedRunnable
+   *          called when network is connected.
+   * @param lostRunnable
+   *          called when network is lost.
    * @return the receiver object.
    */
-  public static BroadcastReceiver notifyInternetState(Context ctx,
+  public BroadcastReceiver notifyInternetState(Context ctx,
           final Runnable connectedRunnable, final Runnable lostRunnable) {
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -46,10 +67,11 @@ public class NetworkUtils {
 
   /**
    * remove the listener
+   *
    * @param ctx
    * @param receiver
    */
-  public static void removeInternetStateNotifier(Context ctx,
+  public void removeInternetStateNotifier(Context ctx,
           BroadcastReceiver receiver) {
     if (null == receiver) {
       return;

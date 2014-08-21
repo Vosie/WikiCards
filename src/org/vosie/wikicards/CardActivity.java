@@ -171,7 +171,7 @@ public class CardActivity extends Activity {
                   showErrorCard(errorType);
                   updateNavBar();
                   progress.dismiss();
-                  ErrorUtils.handleDownloadkError(CardActivity.this, errorType,
+                  ErrorUtils.get().handleDownloadkError(CardActivity.this, errorType,
                           currentIndex == 0);
                   Log.e(TAG, "error while downloading word", e);
                 }
@@ -251,7 +251,7 @@ public class CardActivity extends Activity {
 
   private void showErrorCard(int errorType) {
     String msg = getString(R.string.label_card_error_msg) + "\n"
-            + ErrorUtils.getErrorDesc(this, errorType);
+            + ErrorUtils.get().getErrorDesc(this, errorType);
 
     TextView msgTextView =
             (TextView) currentCard.findViewById(R.id.textview_error_msg);
