@@ -70,4 +70,19 @@
         android:text="@string/label_license_picasso_url"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_2"
+        android:text="@string/label_license_androidWheel"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/url_androidWheel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/padding_license_level_2"
+        android:text="@string/label_license_androidWheel_url"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </LinearLayout>
