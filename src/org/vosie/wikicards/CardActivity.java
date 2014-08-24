@@ -31,6 +31,8 @@ public class CardActivity extends Activity {
 
   private static final String TAG = "CardActivity";
 
+  private static int CARD_POSITION = 0;
+
   private Button previousButton;
   private Button nextButton;
   private TextView indexTextView;
@@ -38,7 +40,6 @@ public class CardActivity extends Activity {
   private WordsStorage wordsStorage;
   private String[] serverIDs;
   private int total;
-  private int currentIndex;
   private int frontFailOccurIndex;
   private int backFailOccurIndex;
   private ProgressDialog progress;
@@ -53,7 +54,7 @@ public class CardActivity extends Activity {
     setContentView(R.layout.activity_card);
     initVariables();
     initViews();
-    loadWordAndShow(serverIDs[currentIndex]);
+    loadWordAndShow(serverIDs[CARD_POSITION]);
   }
 
   @Override
@@ -73,7 +74,6 @@ public class CardActivity extends Activity {
     serverIDs = wordsStorage.getServerIDs();
     frontFailOccurIndex = backFailOccurIndex = total = serverIDs.length;
     langCode = Settings.selectedLanguageCode;
-    currentIndex = 0;
   }
 
   private void initViews() {
@@ -94,7 +94,7 @@ public class CardActivity extends Activity {
     previousButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View arg0) {
-        loadWordAndShow(serverIDs[--currentIndex]);
+        loadWordAndShow(serverIDs[--CARD_POSITION]);
         updateNavBar();
       }
     });
@@ -102,7 +102,7 @@ public class CardActivity extends Activity {
     nextButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View arg0) {
-        loadWordAndShow(serverIDs[++currentIndex]);
+        loadWordAndShow(serverIDs[++CARD_POSITION]);
         updateNavBar();
       }
     });
@@ -112,10 +112,10 @@ public class CardActivity extends Activity {
 
   private void updateNavBar() {
     int failIndex = isCradFront() ? frontFailOccurIndex : backFailOccurIndex;
-    previousButton.setEnabled(currentIndex > 0);
-    nextButton.setEnabled(currentIndex < total - 1
-            && currentIndex < failIndex - 1);
-    indexTextView.setText(String.valueOf(currentIndex + 1) +
+    previousButton.setEnabled(CARD_POSITION > 0);
+    nextButton.setEnabled(CARD_POSITION < total - 1
+            && CARD_POSITION < failIndex - 1);
+    indexTextView.setText(String.valueOf(CARD_POSITION + 1) +
             "/" + String.valueOf(total));
   }
 
@@ -144,7 +144,7 @@ public class CardActivity extends Activity {
     currentCard = isCradFront() ? cardBack : cardFront;
     langCode = isCradFront() ?
             Settings.selectedLanguageCode : Settings.nativeTongue;
-    loadWordAndShow(serverIDs[currentIndex]);
+    loadWordAndShow(serverIDs[CARD_POSITION]);
     AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT, 250);
   }
 
@@ -167,12 +167,12 @@ public class CardActivity extends Activity {
 
                 @Override
                 public void onError(int errorType, Exception e) {
-                  updateFailOccurIndex(currentIndex);
+                  updateFailOccurIndex(CARD_POSITION);
                   showErrorCard(errorType);
                   updateNavBar();
                   progress.dismiss();
                   ErrorUtils.get().handleDownloadkError(CardActivity.this, errorType,
-                          currentIndex == 0);
+                          CARD_POSITION == 0);
                   Log.e(TAG, "error while downloading word", e);
                 }
               });
@@ -261,4 +261,7 @@ public class CardActivity extends Activity {
     currentCard.findViewById(R.id.error_card).setVisibility(View.VISIBLE);
   }
 
+  public int getCardPosition(){
+    return CARD_POSITION;
+  }
 }
