@@ -1,4 +1,4 @@
-package org.vosie.wikicards.utils.test;
+package org.vosie.wikicards.utils;
 
 import java.util.Locale;
 
