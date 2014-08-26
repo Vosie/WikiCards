@@ -56,22 +56,23 @@ public class DownloadDBActivity extends ListActivity implements Constants {
 
   @Override
   protected void onPause() {
-    NetworkUtils.removeInternetStateNotifier(this, networkNotifier);
+    NetworkUtils.get().removeInternetStateNotifier(this, networkNotifier);
     super.onPause();
   }
 
   private void initNetworkNotifier() {
-    networkNotifier = NetworkUtils.notifyInternetState(this, new Runnable() {
-      @Override
-      public void run() {
-        adapter.notifyDataSetChanged();
-      }
-    }, new Runnable() {
-      @Override
-      public void run() {
-        adapter.notifyDataSetChanged();
-      }
-    });
+    networkNotifier = NetworkUtils.get().notifyInternetState(this,
+            new Runnable() {
+              @Override
+              public void run() {
+                adapter.notifyDataSetChanged();
+              }
+            }, new Runnable() {
+              @Override
+              public void run() {
+                adapter.notifyDataSetChanged();
+              }
+            });
   }
 
   private int getRowCount(String langCode) {
@@ -87,7 +88,7 @@ public class DownloadDBActivity extends ListActivity implements Constants {
    *          the language code which may be en, zh, ja.
    */
   private void fillData(View ui, String langCode) {
-    boolean hasInternet = NetworkUtils.isNetworkAvailable(this);
+    boolean hasInternet = NetworkUtils.get().isNetworkAvailable(this);
     String langName = LanguageUtils.getLocalizedLanguageName(langCode);
     int rows = getRowCount(langCode);
     String dbStatus = " - (" + rows + "/" + totalCount + ")";
@@ -153,8 +154,8 @@ public class DownloadDBActivity extends ListActivity implements Constants {
         // Log the error and show error message.
         Log.e(TAG, "error while downloading offline db", e);
         progressDialog.dismiss();
-        ErrorUtils.handleDownloadkError(DownloadDBActivity.this, errorType,
-                false);
+        ErrorUtils.get().handleDownloadkError(DownloadDBActivity.this,
+                errorType, false);
       }
     });
   }
@@ -162,7 +163,7 @@ public class DownloadDBActivity extends ListActivity implements Constants {
   private void deleteDB(final String langCode) {
     String msg = getString(R.string.dialog_desc_confirm_delete_db) + "\n" +
             LanguageUtils.getLocalizedLanguageName(langCode);
-    DialogUtils.showConfirmDialog(this,
+    DialogUtils.get().showConfirmDialog(this,
             R.drawable.ic_launcher,
             getString(R.string.dialog_title_confirm_delete_db),
             msg,
@@ -194,7 +195,7 @@ public class DownloadDBActivity extends ListActivity implements Constants {
     DialogMenuItem deleteMenu = DialogMenuItem.create(1, 0,
             IconFontUtils.get(IconFontUtils.REMOVE) + " " +
                     getString(R.string.button_delete));
-    DialogUtils.showMenuDialog(this,
+    DialogUtils.get().showMenuDialog(this,
             R.drawable.ic_launcher,
             R.string.dialog_title_option_menu,
             true, // cancelable
