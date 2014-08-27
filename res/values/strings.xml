@@ -18,6 +18,7 @@
     <string name="title_fromwiki">from Wikipedia</string>
     <string name="title_settings_activity">Settings of WikiCards</string>
     <string name="button_cardmode">Start to Learn</string>
+    <string name="button_starredmode">Starred Words</string>
     <string name="button_downloaddb">Download Offline DB</string>
     <string name="pref_title_license">Open Source Licenses</string>
     <string name="pref_title_blog">Vosie\'s Blog</string>
@@ -57,5 +58,6 @@
     <string name="pref_title_changelog">Change Logs</string>
     <string name="pref_title_reportbug">Report Bugs</string>
     <string name="msg_empty_database_unable_to_view">The selected language is empty. We cannot open it for you without Internet connection. Please turn on Internet connection or choose a language with offline database</string>
-
+	<string name="dialog_title_tip">Tip</string>
+	<string name="dialog_desc_no_card_to_show">There is no card to show</string>
 </resources>

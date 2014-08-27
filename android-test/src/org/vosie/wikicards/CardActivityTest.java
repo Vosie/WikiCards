@@ -1,4 +1,4 @@
-package org.vosie.wikicards.test;
+package org.vosie.wikicards;
 
 import org.vosie.wikicards.CardActivity;
 import org.vosie.wikicards.R;

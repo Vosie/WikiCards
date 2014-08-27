@@ -36,6 +36,7 @@ public class MainActivity extends Activity implements Constants {
   private int totalRecords;
   private BroadcastReceiver networkNotifier;
   private LangListAdapter langAdapter;
+  private Button starredModeButton;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class MainActivity extends Activity implements Constants {
   private void initViews() {
     initLangugeSpinner();
     initCardModeButton();
+    initStarredModeButton();
     initDownloadDB();
     initTypeFace();
   }
@@ -234,6 +236,17 @@ public class MainActivity extends Activity implements Constants {
       @Override
       public void onClick(View arg0) {
         openCardMode();
+      }
+    });
+  }
+  
+  private void initStarredModeButton() {
+    starredModeButton = (Button) findViewById(R.id.button_starredmode);
+    starredModeButton.setOnClickListener(new OnClickListener() {
+
+      @Override
+      public void onClick(View arg0) {
+        openActivity(MainActivity.this, StarredCardActivity.class);
       }
     });
   }
