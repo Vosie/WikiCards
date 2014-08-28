@@ -5,7 +5,6 @@ import org.vosie.wikicards.R;
 import org.vosie.wikicards.Settings;
 
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.TouchUtils;
 import android.view.View;
 
 public class CardActivityTest extends
@@ -30,14 +29,26 @@ public class CardActivityTest extends
     mPreviousButton = mCardActivity.findViewById(R.id.button_previous);
   }
 
-  public void testRemeberCardPosotion_save() {
+  public void testRemeberCardPosotion_save() throws Throwable {
     assertEquals(0, mCardActivity.getCardPosition());
-    TouchUtils.clickView(this, mNextButton);
+    this.runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        mNextButton.performClick();
+      }
+    });
+    getInstrumentation().waitForIdleSync();
     mCardActivity.finish();
     this.setActivity(null);
     mCardActivity = getActivity();
     assertEquals(1, mCardActivity.getCardPosition());
-    TouchUtils.clickView(this, mPreviousButton);
+    this.runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        mPreviousButton.performClick();
+      }
+    });
+    getInstrumentation().waitForIdleSync();
     mCardActivity.finish();
     this.setActivity(null);
     mCardActivity = getActivity();
