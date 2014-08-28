@@ -52,7 +52,7 @@ public class DialogUtils {
    *          the callback function which will be called when user cancels it or
    *          press cancel button.
    */
-  public void showConfirmDialog(Context ctx, int icon,
+  public AlertDialog showConfirmDialog(Context ctx, int icon,
           CharSequence title, CharSequence desc,
           CharSequence okText, CharSequence cancelText, boolean cancelable,
           DialogInterface.OnClickListener click,
@@ -76,35 +76,35 @@ public class DialogUtils {
       }
     });
     builder.setOnCancelListener(cancel);
-    builder.show();
+    return builder.show();
   }
 
-  public void showConfirmDialog(Context ctx, int icon,
+  public AlertDialog showConfirmDialog(Context ctx, int icon,
           CharSequence title, CharSequence desc, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
 
-    showConfirmDialog(ctx, icon, title, desc,
+    return showConfirmDialog(ctx, icon, title, desc,
             ctx.getString(android.R.string.ok),
             ctx.getString(android.R.string.cancel), cancelable, click, cancel);
   }
 
-  public void showConfirmDialog(Context ctx, int icon,
+  public AlertDialog showConfirmDialog(Context ctx, int icon,
           int title, int desc, int okText, int cancelText, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
 
-    showConfirmDialog(ctx, icon, ctx.getString(title), ctx.getString(desc),
+    return showConfirmDialog(ctx, icon, ctx.getString(title), ctx.getString(desc),
             ctx.getString(okText), ctx.getString(cancelText), cancelable,
             click, cancel);
   }
 
-  public void showConfirmDialog(Context ctx, int icon,
+  public AlertDialog showConfirmDialog(Context ctx, int icon,
           int title, int desc, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
 
-    showConfirmDialog(ctx, icon, ctx.getString(title), ctx.getString(desc),
+    return showConfirmDialog(ctx, icon, ctx.getString(title), ctx.getString(desc),
             cancelable, click, cancel);
   }
 
@@ -125,7 +125,7 @@ public class DialogUtils {
    *          the callback function which will be called when user cancels it or
    *          press cancel button.
    */
-  public void showAlertDialog(Context ctx,
+  public AlertDialog showAlertDialog(Context ctx,
           CharSequence title, CharSequence msg, boolean cancelable,
           DialogInterface.OnClickListener click,
           final DialogInterface.OnCancelListener cancel) {
@@ -135,7 +135,7 @@ public class DialogUtils {
     builder.setPositiveButton(android.R.string.ok, click);
     builder.setOnCancelListener(cancel);
     builder.setCancelable(cancelable);
-    builder.show();
+    return builder.show();
   }
 
   /**
@@ -145,8 +145,8 @@ public class DialogUtils {
    * @param title
    * @param msg
    */
-  public void showAlertDialog(Context ctx, int title, int msg) {
-    showAlertDialog(ctx, ctx.getResources().getString(title),
+  public AlertDialog showAlertDialog(Context ctx, int title, int msg) {
+    return showAlertDialog(ctx, ctx.getResources().getString(title),
             ctx.getResources().getText(msg), true, null, null);
   }
 
@@ -165,10 +165,10 @@ public class DialogUtils {
    * @param closeSelf
    *          to indicate if it should close activity when user click ok.
    */
-  public void showAlertDialog(final Activity ctx,
+  public AlertDialog showAlertDialog(final Activity ctx,
           CharSequence title, CharSequence msg, boolean cancelable,
           final boolean closeSelf) {
-    showAlertDialog(ctx, title, msg, cancelable, new OnClickListener() {
+    return showAlertDialog(ctx, title, msg, cancelable, new OnClickListener() {
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -204,7 +204,7 @@ public class DialogUtils {
    * @param listener
    *          the click and cancel listener.
    */
-  public void showMenuDialog(Context ctx, int icon,
+  public AlertDialog showMenuDialog(Context ctx, int icon,
           CharSequence title, boolean cancelable, final DialogMenuItem[] menus,
           final DialogMenuListener listener) {
 
@@ -231,6 +231,6 @@ public class DialogUtils {
         }
       }
     });
-    builder.show();
+    return builder.show();
   }
 }

@@ -3,6 +3,7 @@ package org.vosie.wikicards.test.mock.utils;
 import org.vosie.wikicards.utils.DialogUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 
 public class MockDialogUtils extends DialogUtils {
@@ -22,7 +23,7 @@ public class MockDialogUtils extends DialogUtils {
   public boolean closeSelf;
 
   @Override
-  public void showAlertDialog(Activity ctx, CharSequence title,
+  public AlertDialog showAlertDialog(Activity ctx, CharSequence title,
           CharSequence msg, boolean cancelable, boolean closeSelf) {
 
     this.activity = ctx;
@@ -30,5 +31,6 @@ public class MockDialogUtils extends DialogUtils {
     this.msg = msg;
     this.cancelable = cancelable;
     this.closeSelf = closeSelf;
+    return null;
   }
 }
