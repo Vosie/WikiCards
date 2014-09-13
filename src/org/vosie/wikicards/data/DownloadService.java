@@ -53,7 +53,7 @@ public class DownloadService extends IntentService {
   private void sendError(int type, String url, Exception e) {
     Bundle errorBundle = new Bundle();
     errorBundle.putSerializable(PARAM_EXCEPTION, e);
-    mReceiver.send(HTTP_ERROR, errorBundle);
+    mReceiver.send(type, errorBundle);
   }
 
   private void copyFileFromUrl(String urlToDownload, String destination)
@@ -72,7 +72,7 @@ public class DownloadService extends IntentService {
       }
 
       int fileLength = httpConnection.getContentLength();
-      input = new BufferedInputStream(url.openStream());
+      input = new BufferedInputStream(httpConnection.getInputStream());
       output = new FileOutputStream(destination);
       byte data[] = new byte[512 * 1024];
       long total = 0;
