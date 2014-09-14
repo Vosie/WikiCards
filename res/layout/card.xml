@@ -9,14 +9,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/button_go_to_wiki"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#000" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/button_go_to_wiki"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#000" />
+
+            <ImageButton
+                android:id="@+id/button_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="#00ffffff"
+                android:contentDescription="starButton"
+                android:src="@drawable/star_off" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textview_word"

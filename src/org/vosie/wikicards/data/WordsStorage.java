@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.vosie.wikicards.Constants;
+import org.vosie.wikicards.utils.DatabaseUtils;
 import org.vosie.wikicards.utils.JSONUtils;
 import org.vosie.wikicards.utils.NetworkUtils;
 
@@ -159,22 +160,12 @@ public class WordsStorage {
             Context.MODE_PRIVATE,
             null);
 
-    if (!checkTableExist(db, "words")) {
+    if (!DatabaseUtils.checkTableExist(db, "words")) {
       db.execSQL(CREATE_TABLE);
       db.execSQL(CREATE_INDEX);
     }
 
     return db;
-  }
-
-  private boolean checkTableExist(SQLiteDatabase db, String tableName) {
-    Cursor c = db.rawQuery("SELECT * FROM sqlite_master WHERE type='table' " +
-            "AND name='" + tableName + "';", null);
-    try {
-      return c.getCount() > 0;
-    } finally {
-      c.close();
-    }
   }
 
   // we don't need category in this case because serverID implies the
@@ -366,6 +357,5 @@ public class WordsStorage {
     File dbFile = mContext.getDatabasePath(getDBName(langCode, category));
     intent.putExtra("destination", dbFile.getPath());
     mContext.startService(intent);
-
   }
 }

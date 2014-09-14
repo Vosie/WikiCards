@@ -54,6 +54,16 @@
             android:contentDescription="@string/button_cardmode"
             android:text="@string/button_cardmode"
             android:textColor="@drawable/button_text" />
+        
+        <Button
+            android:id="@+id/button_starredmode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/button_blue"
+            android:contentDescription="@string/button_starredmode"
+            android:text="@string/button_starredmode"
+            android:textColor="@drawable/button_text" />
 
         <Button
             android:id="@+id/button_downloaddb"

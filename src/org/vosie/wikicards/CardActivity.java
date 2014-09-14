@@ -1,8 +1,10 @@
 package org.vosie.wikicards;
 
 import org.vosie.wikicards.data.DownloadWordListener;
+import org.vosie.wikicards.data.StarredWordsStorage;
 import org.vosie.wikicards.data.Word;
 import org.vosie.wikicards.data.WordsStorage;
+import org.vosie.wikicards.utils.DialogUtils;
 import org.vosie.wikicards.utils.ErrorUtils;
 import org.vosie.wikicards.utils.IconFontUtils;
 
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +41,7 @@ public class CardActivity extends Activity {
   private TextView indexTextView;
   private String langCode;
   private WordsStorage wordsStorage;
+  protected StarredWordsStorage starredWordsStorage;
   private String[] serverIDs;
   private int total;
   private int frontFailOccurIndex;
@@ -54,7 +58,16 @@ public class CardActivity extends Activity {
     setContentView(R.layout.activity_card);
     initVariables();
     initViews();
-    loadWordAndShow(serverIDs[CARD_POSITION]);
+    if (serverIDs.length > 0) {
+      loadWordAndShow(serverIDs[CARD_POSITION]);
+    } else {
+      DialogUtils.get().showAlertDialog(this,
+              getString(R.string.dialog_title_tip),
+              getString(R.string.dialog_desc_no_card_to_show),
+              false,
+              true
+              );
+    }
   }
 
   @Override
@@ -71,9 +84,20 @@ public class CardActivity extends Activity {
 
   private void initVariables() {
     wordsStorage = new WordsStorage(this, Constants.CATEGORY_COUNTRY);
-    serverIDs = wordsStorage.getServerIDs();
+    starredWordsStorage =
+            new StarredWordsStorage(this, Constants.CATEGORY_COUNTRY);
+    serverIDs = getServerIDs();
     frontFailOccurIndex = backFailOccurIndex = total = serverIDs.length;
     langCode = Settings.selectedLanguageCode;
+    CARD_POSITION = getStartCardPosition();
+  }
+
+  protected String[] getServerIDs() {
+    return wordsStorage.getServerIDs();
+  }
+
+  protected int getStartCardPosition() {
+    return CARD_POSITION;
   }
 
   private void initViews() {
@@ -189,6 +213,27 @@ public class CardActivity extends Activity {
             (TextView) currentCard.findViewById(R.id.textview_desc);
     Button goToWikiButton =
             (Button) currentCard.findViewById(R.id.button_go_to_wiki);
+    final ImageButton starButton = (ImageButton) currentCard.findViewById(R.id.button_star);
+
+    if (starredWordsStorage.isStarred(word.serverID)) {
+      starButton.setImageResource(R.drawable.star_on);
+    } else {
+      starButton.setImageResource(R.drawable.star_off);
+    }
+
+    starButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (starredWordsStorage.isStarred(word.serverID)) {
+          starredWordsStorage.unStarWord(word.serverID);
+          starButton.setImageResource(R.drawable.star_off);
+        } else {
+
+          starredWordsStorage.starWord(word.serverID);
+          starButton.setImageResource(R.drawable.star_on);
+        }
+      }
+    });
 
     goToWikiButton.setText(IconFontUtils.get(IconFontUtils.WIKIPEDIA));
     goToWikiButton.setTypeface(Settings.iconFont);
@@ -261,7 +306,7 @@ public class CardActivity extends Activity {
     currentCard.findViewById(R.id.error_card).setVisibility(View.VISIBLE);
   }
 
-  public int getCardPosition(){
+  public int getCardPosition() {
     return CARD_POSITION;
   }
 }
