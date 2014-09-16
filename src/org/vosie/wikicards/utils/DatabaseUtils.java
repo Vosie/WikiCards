@@ -13,4 +13,8 @@ public class DatabaseUtils {
       c.close();
     }
   }
+
+  public static String getDBName(String langCode, int category) {
+    return langCode + "-" + category + ".sqlite3";
+  }
 }

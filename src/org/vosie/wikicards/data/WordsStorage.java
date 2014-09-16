@@ -50,21 +50,24 @@ public class WordsStorage {
 
   private Context mContext;
   private int category;
+  private Handler handler = new Handler();
 
   public WordsStorage(Context context, int category) {
     mContext = context;
     this.category = category;
 
     if (!checkDBExist("base")) {
-      SQLiteDatabase db = mContext.openOrCreateDatabase(getDBName("base", category),
+      SQLiteDatabase db = mContext.openOrCreateDatabase(
+              DatabaseUtils.getDBName("base", category),
               Context.MODE_PRIVATE, null);
       db.close();
       InputStream input = null;
       OutputStream output = null;
       try {
-        input = mContext.getAssets().open(getDBName("base", category));
+        input = mContext.getAssets().open(
+                DatabaseUtils.getDBName("base", category));
         output = new FileOutputStream(mContext.getDatabasePath(
-                getDBName("base", category)));
+                DatabaseUtils.getDBName("base", category)));
         IOUtils.copy(input, output);
       } catch (IOException e) {
         e.printStackTrace();
@@ -75,8 +78,12 @@ public class WordsStorage {
     }
   }
 
+  public void setHandler(Handler h) {
+    this.handler = h;
+  }
+
   private boolean checkDBExist(String lang) {
-    File db = mContext.getDatabasePath(getDBName(lang, category));
+    File db = mContext.getDatabasePath(DatabaseUtils.getDBName(lang, category));
     return db.exists() && db.isFile();
   }
 
@@ -85,7 +92,7 @@ public class WordsStorage {
     ArrayList<String> serverIDs = new ArrayList<String>();
 
     SQLiteDatabase db = mContext.openOrCreateDatabase(
-            getDBName("base", category),
+            DatabaseUtils.getDBName("base", category),
             Context.MODE_PRIVATE,
             null);
     try {
@@ -116,10 +123,6 @@ public class WordsStorage {
     } finally {
       db.close();
     }
-  }
-
-  private String getDBName(String langCode, int category) {
-    return langCode + "-" + category + ".sqlite3";
   }
 
   public Word getWordFromLocal(String serverID, String langCode) {
@@ -156,7 +159,7 @@ public class WordsStorage {
 
   private SQLiteDatabase openOrCreateWordsDatebase(String langCode) {
     SQLiteDatabase db = mContext.openOrCreateDatabase(
-            getDBName(langCode, category),
+            DatabaseUtils.getDBName(langCode, category),
             Context.MODE_PRIVATE,
             null);
 
@@ -182,7 +185,7 @@ public class WordsStorage {
     String tempFilePath = mContext.getCacheDir().getPath() + "/" +
             serverID.split("/")[1] + ".json";
 
-    WordReceiver receiver = new WordReceiver(new Handler(), tempFilePath);
+    WordReceiver receiver = new WordReceiver(this.handler, tempFilePath);
     receiver.setAutoInsert(true);
     receiver.setWordStorageListener(listener);
 
@@ -302,7 +305,8 @@ public class WordsStorage {
   }
 
   public boolean deleteDB(String langCode) {
-    return mContext.getDatabasePath(getDBName(langCode, category)).delete();
+    return mContext.getDatabasePath(
+            DatabaseUtils.getDBName(langCode, category)).delete();
   }
 
   public void downloadDB(String langCode, final DownloadDBListener listener) {
@@ -319,7 +323,7 @@ public class WordsStorage {
     intent.putExtra("url", "http://api.vosie.org/wikicards/" + langCode + "/" +
             CATEGORY_NAMES[Constants.CATEGORY_COUNTRY] + "/" + dbName);
 
-    intent.putExtra("receiver", new ResultReceiver(new Handler()) {
+    intent.putExtra("receiver", new ResultReceiver(this.handler) {
       @Override
       protected void onReceiveResult(int resultCode, Bundle resultData) {
         super.onReceiveResult(resultCode, resultData);
@@ -354,7 +358,8 @@ public class WordsStorage {
       }
 
     });
-    File dbFile = mContext.getDatabasePath(getDBName(langCode, category));
+    File dbFile = mContext.getDatabasePath(
+            DatabaseUtils.getDBName(langCode, category));
     intent.putExtra("destination", dbFile.getPath());
     mContext.startService(intent);
   }
