@@ -30,15 +30,18 @@ public class DatabaseUtilsTest extends ActivityInstrumentationTestCase2<MainActi
             DB_NAME,
             Context.MODE_PRIVATE,
             null);
-    
-    
+
     assertFalse(DatabaseUtils.checkTableExist(db, testTableName));
-    
+
     db.execSQL(create_table);
-    
+
     assertTrue(DatabaseUtils.checkTableExist(db, testTableName));
-    
+
     db.close();
+  }
+
+  public void testGetDBName() {
+    assertEquals("base-1.sqlite3", DatabaseUtils.getDBName("base", 1));
   }
 
 }
