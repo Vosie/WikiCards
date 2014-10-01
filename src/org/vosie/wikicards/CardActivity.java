@@ -51,6 +51,7 @@ public class CardActivity extends Activity {
   private View cardFront;
   private View cardBack;
   private ViewAnimator viewAnimator;
+  private CardPositionSelector cardPositionSelector;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class CardActivity extends Activity {
     frontFailOccurIndex = backFailOccurIndex = total = serverIDs.length;
     langCode = Settings.selectedLanguageCode;
     CARD_POSITION = getStartCardPosition();
+    initCardPositionSelector();
   }
 
   protected String[] getServerIDs() {
@@ -131,7 +133,28 @@ public class CardActivity extends Activity {
       }
     });
 
+    indexTextView.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        cardPositionSelector.show(CARD_POSITION);
+      }
+    });
+
     updateNavBar();
+  }
+
+  private void initCardPositionSelector() {
+    CardPositionSelector.OnSelectListener listener =
+            new CardPositionSelector.OnSelectListener() {
+              @Override
+              public void onSelect(int item) {
+                CARD_POSITION = item;
+                loadWordAndShow(serverIDs[item]);
+                updateNavBar();
+              }
+            };
+    cardPositionSelector =
+            new CardPositionSelector(this, serverIDs.length, listener);
   }
 
   private void updateNavBar() {
@@ -308,5 +331,13 @@ public class CardActivity extends Activity {
 
   public int getCardPosition() {
     return CARD_POSITION;
+  }
+
+  public void setCardPosition(int p) {
+    CARD_POSITION = p;
+  }
+
+  public CardPositionSelector getPositionSelector() {
+    return cardPositionSelector;
   }
 }

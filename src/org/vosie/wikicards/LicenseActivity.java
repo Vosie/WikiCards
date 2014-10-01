@@ -8,7 +8,12 @@ import android.widget.TextView;
 import com.google.analytics.tracking.android.EasyTracker;
 
 public class LicenseActivity extends Activity {
-  private int[] links = { R.id.url_wikicards, R.id.url_flip, R.id.url_picasso };
+  private int[] links = {
+          R.id.url_wikicards,
+          R.id.url_flip,
+          R.id.url_picasso,
+          R.id.url_androidWheel
+  };
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +24,13 @@ public class LicenseActivity extends Activity {
               .setMovementMethod(LinkMovementMethod.getInstance());
     }
   }
-  
+
   @Override
   protected void onStart() {
     super.onStart();
     EasyTracker.getInstance(this).activityStart(this);
   }
-  
+
   @Override
   protected void onStop() {
     super.onStop();
