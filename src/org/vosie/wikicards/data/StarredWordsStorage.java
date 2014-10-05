@@ -10,20 +10,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 public class StarredWordsStorage {
-  
+
   private Context mContext;
-  
+  private int mCategory;
+
   public StarredWordsStorage(Context context, int category) {
     mContext = context;
+    mCategory = category;
   }
-  
+
   public SQLiteDatabase openOrCreateStarredWordsDatebase() {
     String create_starred_table = "CREATE TABLE starred ("
             + "serverID     TEXT PRIMARY KEY"
             + ")";
 
     SQLiteDatabase db = mContext.openOrCreateDatabase(
-            "starred",
+            "starred-" + mCategory,
             Context.MODE_PRIVATE,
             null);
 

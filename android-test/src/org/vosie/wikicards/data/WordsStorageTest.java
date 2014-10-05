@@ -89,9 +89,7 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
     File db = act.getDatabasePath(DatabaseUtils.getDBName("base",
             Constants.CATEGORY_COUNTRY));
 
-    WordsStorage ws = new WordsStorage(act,
-            Constants.CATEGORY_COUNTRY);
-    ws.deleteDB("base");
+    new WordsStorage(act, "base", Constants.CATEGORY_COUNTRY).deleteDB();
     assertFalse(db.exists());
   }
 
@@ -169,21 +167,21 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
     network.networkAvailability = true;
     network.mock();
     TestActivityWrapper wrapper = new TestActivityWrapper(getActivity());
-    WordsStorage ws = new WordsStorage(wrapper, Constants.CATEGORY_COUNTRY);
-    ws.downloadDB("zh", new DownloadDBListener() {
-      @Override
-      public void onProgressing(int progress) {
-      }
+    new WordsStorage(wrapper, "zh", Constants.CATEGORY_COUNTRY)
+            .downloadDB(new DownloadDBListener() {
+              @Override
+              public void onProgressing(int progress) {
+              }
 
-      @Override
-      public void onComplete() {
-      }
+              @Override
+              public void onComplete() {
+              }
 
-      @Override
-      public void onError(int errorType, Exception e) {
-        hasError = true;
-      }
-    });
+              @Override
+              public void onError(int errorType, Exception e) {
+                hasError = true;
+              }
+            });
     assertFalse(hasError);
     assertEquals("http://api.vosie.org/wikicards/zh/country/zh.sqlite3",
             wrapper.gotServiceIntent.getStringExtra("url"));
@@ -200,21 +198,21 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
     network.networkAvailability = false;
     network.mock();
     TestActivityWrapper wrapper = new TestActivityWrapper(getActivity());
-    WordsStorage ws = new WordsStorage(wrapper, Constants.CATEGORY_COUNTRY);
-    ws.downloadDB("zh", new DownloadDBListener() {
-      @Override
-      public void onProgressing(int progress) {
-      }
+    new WordsStorage(wrapper, "zh", Constants.CATEGORY_COUNTRY).downloadDB(
+            new DownloadDBListener() {
+              @Override
+              public void onProgressing(int progress) {
+              }
 
-      @Override
-      public void onComplete() {
-      }
+              @Override
+              public void onComplete() {
+              }
 
-      @Override
-      public void onError(int errorType, Exception e) {
-        hasError = true;
-      }
-    });
+              @Override
+              public void onError(int errorType, Exception e) {
+                hasError = true;
+              }
+            });
     assertTrue(hasError);
     network.restore();
   }

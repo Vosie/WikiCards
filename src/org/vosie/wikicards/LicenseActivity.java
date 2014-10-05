@@ -11,7 +11,8 @@ public class LicenseActivity extends SecondTierActivity {
           R.id.url_wikicards,
           R.id.url_flip,
           R.id.url_picasso,
-          R.id.url_androidWheel
+          R.id.url_androidWheel,
+          R.id.url_stickyListHeaders
   };
 
   @Override

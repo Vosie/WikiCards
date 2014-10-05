@@ -20,21 +20,28 @@
         android:textSize="32sp" />
 
     <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:prompt="@string/title_spinner_categories"
+        android:spinnerMode="dialog" />
+
+    <TextView
+        android:id="@+id/label_In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_in"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="32sp" />
+
+    <Spinner
         android:id="@+id/spinner_language"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:prompt="@string/title_spinner"
-        android:spinnerMode="dialog"
-        android:textAlignment="center" />
-
-    <TextView
-        android:id="@+id/label_fromwiki"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_fromwiki"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="32sp" />
+        android:prompt="@string/title_spinner_languages"
+        android:spinnerMode="dialog" />
 
     <!-- control buttons -->
 
@@ -54,7 +61,7 @@
             android:contentDescription="@string/button_cardmode"
             android:text="@string/button_cardmode"
             android:textColor="@drawable/button_text" />
-        
+
         <Button
             android:id="@+id/button_starredmode"
             android:layout_width="match_parent"

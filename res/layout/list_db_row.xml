@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical|left"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/label_category_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/label_db_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_download"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_blue"
+        android:contentDescription="@string/button_download"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/button_text"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_delete"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_red"
+        android:contentDescription="@string/button_delete"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/button_text"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_options"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_green"
+        android:contentDescription="@string/button_options"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@drawable/button_text"
+        android:visibility="gone" />
+
+</LinearLayout>

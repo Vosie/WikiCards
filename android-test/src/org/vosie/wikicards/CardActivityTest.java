@@ -29,6 +29,7 @@ public class CardActivityTest extends
   protected void setUp() throws Exception {
     super.setUp();
     Settings.selectedLanguageCode = "base";
+    Settings.selectedCategory = 1;
     Settings.nativeTongue = "tw";
     setActivityInitialTouchMode(true);
     mCardActivity = getActivity();

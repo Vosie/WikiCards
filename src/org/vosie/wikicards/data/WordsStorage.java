@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.vosie.wikicards.Constants;
+import org.vosie.wikicards.utils.CategoryUtils;
 import org.vosie.wikicards.utils.DatabaseUtils;
 import org.vosie.wikicards.utils.JSONUtils;
 import org.vosie.wikicards.utils.NetworkUtils;
@@ -43,14 +43,15 @@ public class WordsStorage {
   protected static final String CREATE_INDEX = "CREATE UNIQUE INDEX IF NOT " +
           "EXISTS serverIDIndex ON words(serverID)";
 
-  // The first category id is 1 instead of 0. So, we put a dummy category name:
-  // preserved. We may also use it to play some tricks in the future.
-  private static final String[] CATEGORY_NAMES = new String[] { "preserved",
-          "country" };
-
   private Context mContext;
   private int category;
+  private String lang = "base";
   private Handler handler = new Handler();
+
+  public WordsStorage(Context context, String lang, int category) {
+    this(context, category);
+    this.lang = lang;
+  }
 
   public WordsStorage(Context context, int category) {
     mContext = context;
@@ -108,6 +109,10 @@ public class WordsStorage {
     }
   }
 
+  public int getRowCount() {
+    return getRowCount(lang);
+  }
+
   public int getRowCount(String langCode) {
     if (!checkDBExist(langCode)) {
       return 0;
@@ -123,6 +128,10 @@ public class WordsStorage {
     } finally {
       db.close();
     }
+  }
+
+  public Word getWordFromLocal(String serverID) {
+    return getWordFromLocal(serverID, lang);
   }
 
   public Word getWordFromLocal(String serverID, String langCode) {
@@ -169,6 +178,10 @@ public class WordsStorage {
     }
 
     return db;
+  }
+
+  public void getWordFromServer(String serverID, DownloadWordListener listener) {
+    getWordFromServer(serverID, lang, listener);
   }
 
   // we don't need category in this case because serverID implies the
@@ -260,8 +273,10 @@ public class WordsStorage {
         word.label = jsonWord.getString("label");
         word.languageCode = jsonWord.getString("languageCode");
         word.url = jsonWord.getString("url");
-        word.latitude = jsonWord.getString("latitude");
-        word.longitude = jsonWord.getString("longitude");
+        word.latitude = jsonWord.has("latitude") ?
+                jsonWord.getString("latitude") : null;
+        word.longitude = jsonWord.has("longitude") ?
+                jsonWord.getString("longitude") : null;
         word.imageURL = jsonWord.getString("imageURL");
         word.shortDesc = jsonWord.getString("shortDesc");
         word.category = jsonWord.getInt("category");
@@ -304,12 +319,12 @@ public class WordsStorage {
     }
   }
 
-  public boolean deleteDB(String langCode) {
+  public boolean deleteDB() {
     return mContext.getDatabasePath(
-            DatabaseUtils.getDBName(langCode, category)).delete();
+            DatabaseUtils.getDBName(lang, category)).delete();
   }
 
-  public void downloadDB(String langCode, final DownloadDBListener listener) {
+  public void downloadDB(final DownloadDBListener listener) {
 
     if (!NetworkUtils.get().isNetworkAvailable(mContext)) {
       listener.onError(DownloadDBListener.NETWORK_ERROR,
@@ -317,11 +332,11 @@ public class WordsStorage {
       return;
     }
 
-    String dbName = langCode + ".sqlite3";
+    String dbName = lang + ".sqlite3";
 
     Intent intent = new Intent(mContext, DownloadService.class);
-    intent.putExtra("url", "http://api.vosie.org/wikicards/" + langCode + "/" +
-            CATEGORY_NAMES[Constants.CATEGORY_COUNTRY] + "/" + dbName);
+    intent.putExtra("url", "http://api.vosie.org/wikicards/" + lang + "/" +
+            CategoryUtils.getResourceName(category) + "/" + dbName);
 
     intent.putExtra("receiver", new ResultReceiver(this.handler) {
       @Override
@@ -359,7 +374,7 @@ public class WordsStorage {
 
     });
     File dbFile = mContext.getDatabasePath(
-            DatabaseUtils.getDBName(langCode, category));
+            DatabaseUtils.getDBName(lang, category));
     intent.putExtra("destination", dbFile.getPath());
     mContext.startService(intent);
   }

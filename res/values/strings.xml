@@ -16,8 +16,11 @@
     <string name="label_license_picasso_url">(<a href="https://github.com/square/picasso">https://github.com/square/picasso</a>)</string>
     <string name="label_license_androidWheel">Android Wheel Control</string>
     <string name="label_license_androidWheel_url">(<a href="http://android-devblog.blogspot.com/2010/05/wheel-ui-contol.html">http://android-devblog.blogspot.com/2010/05/wheel-ui-contol.html</a>)</string>
-    <string name="title_spinner">Languages</string>
-    <string name="title_fromwiki">from Wikipedia</string>
+    <string name="label_license_stickyListHeaders">StickyListHeaders</string>
+    <string name="label_license_stickyListHeaders_url">(<a href="https://github.com/emilsjolander/StickyListHeaders">https://github.com/emilsjolander/StickyListHeaders</a>)</string>
+    <string name="title_spinner_languages">Languages</string>
+    <string name="title_spinner_categories">Categories</string>
+    <string name="title_in">In</string>
     <string name="title_settings_activity">Settings of WikiCards</string>
     <string name="button_cardmode">Start to Learn</string>
     <string name="button_starredmode">Starred Words</string>

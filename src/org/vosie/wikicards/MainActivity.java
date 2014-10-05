@@ -1,5 +1,6 @@
 package org.vosie.wikicards;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -15,6 +16,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,15 +36,17 @@ public class MainActivity extends Activity implements Constants {
   private Spinner languageSpinner;
   private Button cardModeButton;
   private WordsStorage storage;
-  private int totalRecords;
   private BroadcastReceiver networkNotifier;
   private LangListAdapter langAdapter;
   private Button starredModeButton;
+  private Spinner categorySpinner;
+  private CategoryListAdapter categoryAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    upguradeDB();
     initViews();
   }
 
@@ -74,6 +79,7 @@ public class MainActivity extends Activity implements Constants {
 
   private void initViews() {
     initLangugeSpinner();
+    initCategorySpinner();
     initCardModeButton();
     initStarredModeButton();
     initDownloadDB();
@@ -112,23 +118,20 @@ public class MainActivity extends Activity implements Constants {
 
   private int getRowCount(String langCode) {
     if (null == storage) {
-      storage = new WordsStorage(this, CATEGORY_COUNTRY);
+      storage = new WordsStorage(this,
+              (int) categorySpinner.getSelectedItemId());
     }
     return storage.getRowCount(langCode);
-  }
-
-  private int getTotalRecords() {
-    if (0 == totalRecords) {
-      totalRecords = storage.getRowCount("base");
-    }
-    return totalRecords;
   }
 
   private void fillData(View ui, String langCode) {
     boolean hasInternet = NetworkUtils.get().isNetworkAvailable(this);
     String langName = LanguageUtils.getLocalizedLanguageName(langCode);
-    int rows = getRowCount(langCode);
-    int totalCount = getTotalRecords();
+    WordsStorage storage =
+            new WordsStorage(this, langCode, Settings.selectedCategory);
+    int totalCount = storage.getRowCount("base");
+    int rows = Math.min(storage.getRowCount(), totalCount);
+
     String dbStatus = " - (" + rows + "/" + totalCount + ")";
     TextView label = (TextView) ui.findViewById(R.id.label_lang_name);
     TextView status = (TextView) ui.findViewById(R.id.label_db_status);
@@ -219,6 +222,46 @@ public class MainActivity extends Activity implements Constants {
     return Settings.selectedLanguageCode;
   }
 
+  private void initCategorySpinner() {
+    categoryAdapter = new CategoryListAdapter(this);
+    categorySpinner = (Spinner) this.findViewById(R.id.spinner_category);
+    categorySpinner.setAdapter(categoryAdapter);
+    categorySpinner.setSelection(readSelectedCategory() - 1);
+    categorySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int idx,
+              long id) {
+        switchSelectedCategory((int) id);
+        storage = new WordsStorage(MainActivity.this, (int) id);
+        langAdapter.notifyDataSetChanged();
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> arg0) {
+        // Do nothing in this case.
+      }
+    });
+  }
+
+  private void switchSelectedCategory(int category) {
+    // save the selected category to preference for future usage.
+    SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sp.edit();
+    editor.putInt(PREF_KEY_SELECTED_CATEGORY, category);
+    editor.commit();
+    // update the language code property.
+    Settings.selectedCategory = category;
+  }
+
+  private int readSelectedCategory() {
+    SharedPreferences sp = this.getPreferences(Context.MODE_PRIVATE);
+    // update the category code property to sync the storage with memory
+    // variable.
+    Settings.selectedCategory = sp.getInt(PREF_KEY_SELECTED_CATEGORY, 0);
+    return Settings.selectedCategory;
+  }
+
   private void openCardMode() {
     if (NetworkUtils.get().isNetworkAvailable(this) ||
             getRowCount(Settings.selectedLanguageCode) > 0) {
@@ -239,7 +282,7 @@ public class MainActivity extends Activity implements Constants {
       }
     });
   }
-  
+
   private void initStarredModeButton() {
     starredModeButton = (Button) findViewById(R.id.button_starredmode);
     starredModeButton.setOnClickListener(new OnClickListener() {
@@ -276,5 +319,27 @@ public class MainActivity extends Activity implements Constants {
   // an utill class.
   private static void openActivity(Context ctx, Class<? extends Activity> cls) {
     ctx.startActivity(new Intent(ctx, cls));
+  }
+
+  private void upguradeDB() {
+    PackageInfo pInfo = null;
+    try {
+      pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+      if (pInfo.versionCode == 7) {
+
+        File databaseFile = getDatabasePath("starred-1");
+        File oldDatabaseFile = new File(databaseFile.getParentFile(), "starred");
+        File oldDatabaseFileJournal =
+                new File(databaseFile.getParentFile(), "starred-journal");
+
+        if (oldDatabaseFile.exists()) {
+          oldDatabaseFile.renameTo(databaseFile);
+          oldDatabaseFile.delete();
+          oldDatabaseFileJournal.delete();
+        }
+      }
+    } catch (NameNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 }
