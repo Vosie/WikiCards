@@ -62,4 +62,6 @@
     <string name="msg_empty_database_unable_to_view">The selected language is empty. We cannot open it for you without Internet connection. Please turn on Internet connection or choose a language with offline database</string>
 	<string name="dialog_title_tip">Tip</string>
 	<string name="dialog_desc_no_card_to_show">There is no card to show</string>
+	<string name="msg_error_to_play">This device cannot play MP3 file. Please check if other player is playing now.</string>
+	<string name="button_desc_say_word">read the word</string>
 </resources>

@@ -1,16 +1,21 @@
 package org.vosie.wikicards;
 
+import java.io.File;
+
 import org.vosie.wikicards.data.DownloadWordListener;
+import org.vosie.wikicards.data.SoundStorage;
 import org.vosie.wikicards.data.StarredWordsStorage;
 import org.vosie.wikicards.data.Word;
 import org.vosie.wikicards.data.WordsStorage;
 import org.vosie.wikicards.utils.DialogUtils;
 import org.vosie.wikicards.utils.ErrorUtils;
 import org.vosie.wikicards.utils.IconFontUtils;
+import org.vosie.wikicards.utils.PlayerUtils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +44,7 @@ public class CardActivity extends Activity {
   private Button previousButton;
   private Button nextButton;
   private TextView indexTextView;
-  private String langCode;
+  protected String langCode;
   private WordsStorage wordsStorage;
   protected StarredWordsStorage starredWordsStorage;
   private String[] serverIDs;
@@ -52,6 +57,8 @@ public class CardActivity extends Activity {
   private View cardBack;
   private ViewAnimator viewAnimator;
   private CardPositionSelector cardPositionSelector;
+  private MediaPlayer activePlayer;
+  protected SoundStorage soundStorage;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +94,7 @@ public class CardActivity extends Activity {
     wordsStorage = new WordsStorage(this, Constants.CATEGORY_COUNTRY);
     starredWordsStorage =
             new StarredWordsStorage(this, Constants.CATEGORY_COUNTRY);
+    soundStorage = new SoundStorage(this);
     serverIDs = getServerIDs();
     frontFailOccurIndex = backFailOccurIndex = total = serverIDs.length;
     langCode = Settings.selectedLanguageCode;
@@ -236,6 +244,8 @@ public class CardActivity extends Activity {
             (TextView) currentCard.findViewById(R.id.textview_desc);
     Button goToWikiButton =
             (Button) currentCard.findViewById(R.id.button_go_to_wiki);
+    Button sayWordButton =
+            (Button) currentCard.findViewById(R.id.button_say_word);
     final ImageButton starButton = (ImageButton) currentCard.findViewById(R.id.button_star);
 
     if (starredWordsStorage.isStarred(word.serverID)) {
@@ -260,6 +270,8 @@ public class CardActivity extends Activity {
 
     goToWikiButton.setText(IconFontUtils.get(IconFontUtils.WIKIPEDIA));
     goToWikiButton.setTypeface(Settings.iconFont);
+    sayWordButton.setText(IconFontUtils.get(IconFontUtils.SPEAKER));
+    sayWordButton.setTypeface(Settings.iconFont);
     wordTextView.setText(word.label);
     loadImage(word.imageURL);
     descriptionTextView.setText(word.shortDesc);
@@ -270,6 +282,55 @@ public class CardActivity extends Activity {
         intent.setData(Uri.parse(word.url));
         startActivity(intent);
       }
+    });
+
+    sayWordButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        sayWord(word);
+      }
+    });
+  }
+
+  private void sayWord(final Word w) {
+    SoundStorage ss = soundStorage;
+    ss.getSoundResource(langCode, w.serverID, new SoundStorage.Listener() {
+
+      @Override
+      public void onProgressing(int progress) {
+        Log.d(TAG, "downloading progress: " + progress);
+      }
+
+      @Override
+      public void onReady(File f) {
+        if (!langCode.equals(w.languageCode) ||
+                !serverIDs[CARD_POSITION].equals(w.serverID)) {
+          // user may flip the card
+          // user may change the word, we don't need to say it.
+          return;
+        }
+        if (null != activePlayer && activePlayer.isPlaying()) {
+          activePlayer.stop();
+        }
+        MediaPlayer mp = PlayerUtils.get().createPlayer(CardActivity.this, f,
+                new PlayerUtils.Listener() {
+
+                  @Override
+                  public void onComplete(MediaPlayer mp, int error, int extra) {
+                    if (activePlayer == mp) {
+                      activePlayer = null;
+                    }
+                  }
+                });
+        mp.start();
+        activePlayer = mp;
+      }
+
+      @Override
+      public void onError(int type, Exception ex) {
+        ErrorUtils.get().handleDownloadkError(CardActivity.this, type, false);
+      }
+
     });
   }
 
