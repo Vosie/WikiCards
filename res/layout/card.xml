@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="right"
     android:background="@drawable/card_bg" >
 
     <LinearLayout
@@ -9,29 +10,48 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:padding="5dp" >
 
             <Button
                 android:id="@+id/button_go_to_wiki"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:background="@drawable/button_white"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#000" />
 
-            <ImageButton
-                android:id="@+id/button_star"
+            <Button
+                android:id="@+id/button_say_word"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:background="#00ffffff"
-                android:contentDescription="starButton"
-                android:src="@drawable/star_off" />
-        </RelativeLayout>
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/button_white"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:contentDescription="@string/button_desc_say_word"
+                android:textColor="#000" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/button_star"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00ffffff"
+                    android:contentDescription="starButton"
+                    android:src="@drawable/star_off" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textview_word"

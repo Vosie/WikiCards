@@ -7,6 +7,7 @@ public class IconFontUtils {
   public static final int REMOVE = 0xe603;
   public static final int ARROW_RIGHT = 0xe604;
   public static final int ARROW_LEFT = 0xe605;
+  public static final int SPEAKER = 0xe606;
 
   public static String get(int code) {
     return String.valueOf((char) code);

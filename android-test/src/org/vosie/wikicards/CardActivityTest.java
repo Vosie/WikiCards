@@ -1,14 +1,17 @@
 package org.vosie.wikicards;
 
-import org.vosie.wikicards.CardActivity;
-import org.vosie.wikicards.CardPositionSelector;
-import org.vosie.wikicards.R;
-import org.vosie.wikicards.Settings;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+import org.vosie.wikicards.test.mock.data.MockSoundStorage;
+import org.vosie.wikicards.test.mock.utils.MockPlayerUtils;
 
 import android.app.AlertDialog;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 public class CardActivityTest extends
@@ -93,7 +96,7 @@ public class CardActivityTest extends
     getInstrumentation().waitForIdleSync();
     performClick(dialog.getButton(AlertDialog.BUTTON_POSITIVE));
     assertEquals(10, mCardActivity.getCardPosition());
-    
+
     performClick(idxTv);
     this.runTestOnUiThread(new Runnable() {
       @Override
@@ -131,6 +134,50 @@ public class CardActivityTest extends
       }
     });
     getInstrumentation().waitForIdleSync();
+  }
+
+  private File createTestResource() throws IOException {
+    InputStream is = this.getInstrumentation().getContext().getAssets()
+            .open("ZWE.mp3");
+    File tmpFile = new File(this.getActivity().getCacheDir(), "tmp.mp3");
+    if (tmpFile.exists()) {
+      tmpFile.delete();
+    }
+    FileOutputStream fos = new FileOutputStream(tmpFile);
+    try {
+      IOUtils.copy(is, fos);
+    } finally {
+      is.close();
+      fos.close();
+    }
+    return tmpFile;
+  }
+
+  public void testSayWord() throws Throwable {
+    View sayWord = mCardActivity.findViewById(R.id.button_say_word);
+    final MockSoundStorage mockedSS = new MockSoundStorage(mCardActivity);
+    mCardActivity.soundStorage = mockedSS;
+    performClick(sayWord);
+    assertEquals("base", mockedSS.gotLang);
+    assertEquals("country/ZWE", mockedSS.gotServerID);
+    assertNotNull(mockedSS.gotListener);
+    // We need to change the langCode to en because the langCode of base db is
+    // en.
+    mCardActivity.langCode = "en";
+    final File testFile = createTestResource();
+    MockPlayerUtils mockedPlayer = MockPlayerUtils.createInstance();
+    this.runTestOnUiThread(new Runnable() {
+
+      @Override
+      public void run() {
+        mockedSS.gotListener.onReady(testFile);
+      }
+
+    });
+    this.getInstrumentation().waitForIdleSync();
+    // we may hear a little bit of audio file but not all of it.
+    assertNotNull(mockedPlayer.createdPlayer);
+
   }
 
 }
