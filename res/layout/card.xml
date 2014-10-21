@@ -21,6 +21,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_white"
+                android:contentDescription="@string/button_desc_go_to_wiki"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#000" />
 
@@ -30,8 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/button_white"
-                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:contentDescription="@string/button_desc_say_word"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#000" />
 
             <LinearLayout
@@ -46,11 +47,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#00ffffff"
-                    android:contentDescription="starButton"
+                    android:contentDescription="@string/button_desc_star"
                     android:src="@drawable/star_off" />
-
             </LinearLayout>
-
         </LinearLayout>
 
         <TextView
