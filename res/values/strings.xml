@@ -64,4 +64,8 @@
 	<string name="dialog_desc_no_card_to_show">There is no card to show</string>
 	<string name="msg_error_to_play">This device cannot play MP3 file. Please check if other player is playing now.</string>
 	<string name="button_desc_say_word">read the word</string>
+	<string name="button_desc_previous">move to previous word</string>
+	<string name="button_desc_next">move to next word</string>
+	<string name="button_desc_go_to_wiki">open this word in wikipedia</string>
+	<string name="button_desc_star">make this word as starred word</string>
 </resources>
