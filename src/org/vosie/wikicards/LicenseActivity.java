@@ -1,13 +1,12 @@
 package org.vosie.wikicards;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class LicenseActivity extends Activity {
+public class LicenseActivity extends SecondTierActivity {
   private int[] links = {
           R.id.url_wikicards,
           R.id.url_flip,

@@ -16,6 +16,7 @@ import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,6 +36,16 @@ public class DownloadDBActivity extends ListActivity implements Constants {
     storage = new WordsStorage(this, CATEGORY_COUNTRY);
     totalCount = getRowCount(NEUTRAL_LANG_CODE);
     initAdapter();
+    getActionBar().setDisplayHomeAsUpEnabled(true);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (android.R.id.home == item.getItemId()) {
+      this.onBackPressed();
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

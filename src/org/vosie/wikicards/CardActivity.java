@@ -12,7 +12,6 @@ import org.vosie.wikicards.utils.ErrorUtils;
 import org.vosie.wikicards.utils.IconFontUtils;
 import org.vosie.wikicards.utils.PlayerUtils;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -35,7 +34,7 @@ import com.squareup.picasso.Picasso;
 import com.tekle.oss.android.animation.AnimationFactory;
 import com.tekle.oss.android.animation.AnimationFactory.FlipDirection;
 
-public class CardActivity extends Activity {
+public class CardActivity extends SecondTierActivity {
 
   private static final String TAG = "CardActivity";
 
