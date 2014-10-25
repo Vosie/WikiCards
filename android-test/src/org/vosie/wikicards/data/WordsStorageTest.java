@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import org.vosie.wikicards.Constants;
 import org.vosie.wikicards.MainActivity;
 import org.vosie.wikicards.test.mock.ActivityWrapper;
+import org.vosie.wikicards.test.mock.utils.MockNetworkUtils;
 import org.vosie.wikicards.utils.DatabaseUtils;
 
 import android.app.Activity;
@@ -15,6 +16,8 @@ import android.os.ResultReceiver;
 import android.test.ActivityInstrumentationTestCase2;
 
 public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActivity> {
+
+  private boolean hasError;
 
   private class TestActivityWrapper extends ActivityWrapper {
     public Intent gotServiceIntent;
@@ -38,15 +41,12 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     public void onError(int errorType, Exception e) {
+      hasError = true;
     }
   };
 
   public WordsStorageTest() {
     super(MainActivity.class);
-  }
-
-  public void testGetDBName() {
-
   }
 
   public void testWordsStorage() {
@@ -108,6 +108,12 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
   }
 
   public void testGetWordFromServer() throws Exception {
+    hasError = false;
+    MockNetworkUtils network = new MockNetworkUtils();
+    // tell wordsstorage we have network.
+    network.networkAvailability = true;
+    network.mock();
+
     Activity act = this.getActivity();
     TestActivityWrapper wrapper = new TestActivityWrapper(act);
     WordsStorage ws = new WordsStorage(wrapper, Constants.CATEGORY_COUNTRY);
@@ -116,6 +122,7 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
     ws.setHandler(null);
     ws.getWordFromServer("country/TWN", "zh", listener);
 
+    assertFalse(hasError);
     assertEquals("http://api.vosie.org/wikicards/zh/country/TWN.json",
             wrapper.gotServiceIntent.getStringExtra("url"));
     ResultReceiver rr = (ResultReceiver) wrapper.gotServiceIntent
@@ -153,10 +160,14 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
     assertTrue(db.exists());
     assertEquals(1, ws.getRowCount("zh"));
     db.delete();
-
+    network.restore();
   }
 
   public void testDownloadDB() {
+    hasError = false;
+    MockNetworkUtils network = new MockNetworkUtils();
+    network.networkAvailability = true;
+    network.mock();
     TestActivityWrapper wrapper = new TestActivityWrapper(getActivity());
     WordsStorage ws = new WordsStorage(wrapper, Constants.CATEGORY_COUNTRY);
     ws.downloadDB("zh", new DownloadDBListener() {
@@ -170,11 +181,41 @@ public class WordsStorageTest extends ActivityInstrumentationTestCase2<MainActiv
 
       @Override
       public void onError(int errorType, Exception e) {
+        hasError = true;
       }
     });
+    assertFalse(hasError);
     assertEquals("http://api.vosie.org/wikicards/zh/country/zh.sqlite3",
             wrapper.gotServiceIntent.getStringExtra("url"));
     assertNotNull(wrapper.gotServiceIntent.getParcelableExtra("receiver"));
     assertNotNull(wrapper.gotServiceIntent.getStringExtra("destination"));
+    network.restore();
+  }
+
+  public void testDownloadDBOffline() {
+    // We tell our app that we don't have internet connection and check if they
+    // give us the error message.
+    hasError = false;
+    MockNetworkUtils network = new MockNetworkUtils();
+    network.networkAvailability = false;
+    network.mock();
+    TestActivityWrapper wrapper = new TestActivityWrapper(getActivity());
+    WordsStorage ws = new WordsStorage(wrapper, Constants.CATEGORY_COUNTRY);
+    ws.downloadDB("zh", new DownloadDBListener() {
+      @Override
+      public void onProgressing(int progress) {
+      }
+
+      @Override
+      public void onComplete() {
+      }
+
+      @Override
+      public void onError(int errorType, Exception e) {
+        hasError = true;
+      }
+    });
+    assertTrue(hasError);
+    network.restore();
   }
 }
