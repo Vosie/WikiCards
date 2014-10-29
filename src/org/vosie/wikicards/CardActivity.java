@@ -1,6 +1,8 @@
 package org.vosie.wikicards;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.vosie.wikicards.data.DownloadWordListener;
 import org.vosie.wikicards.data.SoundStorage;
@@ -112,6 +114,17 @@ public class CardActivity extends SecondTierActivity {
   private void initViews() {
     initNavBar();
     initFlipCard();
+    initButtons();
+  }
+
+  private void initButtons() {
+    List<String> badList = Arrays.asList(Constants.PRONUNCIATION_BAD_LIST);
+    cardFront.findViewById(R.id.button_say_word).setVisibility(
+            badList.contains(Settings.selectedLanguageCode) ?
+                    View.GONE : View.VISIBLE);
+    cardBack.findViewById(R.id.button_say_word).setVisibility(
+            badList.contains(Settings.nativeTongue) ?
+                    View.GONE : View.VISIBLE);
   }
 
   private void initNavBar() {

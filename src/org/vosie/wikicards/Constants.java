@@ -9,4 +9,5 @@ public interface Constants {
           "pref_key_contribute_recordings";
   public static final int CATEGORY_COUNTRY = 1;
   public static final String NEUTRAL_LANG_CODE = "base";
+  public static final String[] PRONUNCIATION_BAD_LIST = { "ur" };
 }
