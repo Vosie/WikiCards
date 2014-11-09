@@ -92,9 +92,8 @@ public class CardActivity extends SecondTierActivity {
   }
 
   private void initVariables() {
-    wordsStorage = new WordsStorage(this, Constants.CATEGORY_COUNTRY);
-    starredWordsStorage =
-            new StarredWordsStorage(this, Constants.CATEGORY_COUNTRY);
+    wordsStorage = new WordsStorage(this, Settings.selectedCategory);
+    starredWordsStorage = new StarredWordsStorage(this, Settings.selectedCategory);
     soundStorage = new SoundStorage(this);
     serverIDs = getServerIDs();
     frontFailOccurIndex = backFailOccurIndex = total = serverIDs.length;
